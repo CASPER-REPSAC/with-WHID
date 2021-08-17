@@ -2,6 +2,6 @@
 ## Service : "일 벌리고 실천하기"
 
 ## Members  
-> Floodnut : django-server develop & project leader. 
-> W00 : django-server develop.  
+> Floodnut : django-server develop & project leader.     
 > Pawn : server config & web view.  
+> W00 : django-server develop. 
