@@ -1,2 +1,2 @@
 # dj-eruces-ango
-2021 TEAM "일벌리고수습하기"
+2021 Service "일 벌리고 실천하기"
