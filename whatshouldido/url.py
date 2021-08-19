@@ -6,21 +6,22 @@ app_name ='whatshouldido'
 urlpatterns = [
     #Default Page
     path('',views.index,name='index'),
-    path('',views.error,name='error'),
+    path('error/',views.error,name='error'),
 
     #Personal Page
-    path('',views.login,name='login'),
-    path('',views.signup, name='signup'),
-    path('',views.logout, name='logout'),
-    path('',views.userinfo,name='userinfo'),
+    path('login/',views.login,name='login'),
+    path('signup/',views.signup, name='signup'),
+    path('logout/',views.logout, name='logout'),
+    path('userinfo/',views.userinfo,name='userinfo'),
 
     #Main Page
-    path('',views.main,name='main'),
-    path('',views.calendardetail,name='calendardetail'),
+    path('start/',views.main,name='main'),
+    path('<date:date>/',views.calendardetail,name='calendardetail'),
+    path('',views.groupsearch,name='groupsearch'),
 
     #Group Feature Page
-    path('',views.writearticle, name='writearticle'),
-    path('',views.groupinfo, name='groupinfo'),
-    path('',views.makegroup,name='makegroup'),
-    path('',views.managegroup,name='managegroup'),
+    path('group/<int:pk>/writearticle',views.writearticle, name='writearticle'),
+    path('group/<int:pk>',views.groupinfo, name='group'),
+    path('',views.managegroup,name='managegroup'), # How?
+    path('group/makegroup/',views.makegroup,name='makegroup'),
 ]

@@ -31,6 +31,9 @@ def main(request):
 def calendardetail(request, date):
     return HttpResponse("calendarDetail")
 
+def groupsearch(request, search):
+    return HttpResponse("groupsearch")
+
 
 #Group Feature
 def writearticle(request, group):

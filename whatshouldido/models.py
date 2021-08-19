@@ -160,6 +160,18 @@ class GroupCalendar(models.Model):
         db_table = 'group_calendar'
 
 
+class Grouparticlecomments(models.Model):
+    commentid = models.AutoField(primary_key=True)
+    writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
+    comment = models.CharField(max_length=100)
+    writedate = models.DateTimeField()
+    is_talkback = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'grouparticlecomments'
+
+
 class Studygroups(models.Model):
     groupid = models.AutoField(db_column='groupID', primary_key=True)  # Field name made lowercase.
     groupname = models.CharField(db_column='groupName', max_length=64)  # Field name made lowercase.
