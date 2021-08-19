@@ -28,19 +28,19 @@ def userinfo(request):
 def main(request):
     return HttpResponse("main")
 
-def calendardetail(request):
+def calendardetail(request, date):
     return HttpResponse("calendarDetail")
 
 
 #Group Feature
-def writearticle(request):
+def writearticle(request, group):
     return HttpResponse("writearticle")
 
 def makegroup(request):
     return HttpResponse("makegroup")
 
-def managegroup(request):
+def managegroup(request, group):
     return HttpResponse("managegroup")
 
-def groupinfo(request):
+def groupinfo(request, group):
     return HttpResponse("groupinfo")
