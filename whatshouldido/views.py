@@ -1,12 +1,13 @@
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.http import HttpResponse
 # Create your views here.
 
 
 #Default Page
 def index(request):
-    return HttpResponse("StartPage")
+    page = request.GET.get('page',1)
+    return render(request, 'base.html')
 
 def error(request):
     return HttpResponse("error")
