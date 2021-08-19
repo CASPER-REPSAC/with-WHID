@@ -1,5 +1,6 @@
 # dj-eruces-ango 2021
-## Service : "일 벌리고 실천하기"
+## 서비스명 "일 벌리고 실천하기". 
+> 부제 "What should I do?"  
 
 ## Members  
 > Floodnut : django-server develop & project leader.     
