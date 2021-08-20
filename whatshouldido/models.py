@@ -45,7 +45,7 @@ class AuthUser(models.Model):
     username = models.CharField(unique=True, max_length=150, db_collation='latin1_swedish_ci')
     nickname = models.CharField(unique=True, max_length=32)
     name = models.CharField(max_length=32)
-    email = models.CharField(max_length=254, db_collation='latin1_swedish_ci')
+    email = models.CharField(unique=True, max_length=64)
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()

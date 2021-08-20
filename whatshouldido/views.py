@@ -14,7 +14,7 @@ def error(request):
 
 #Personal Feature
 def login(request):
-    return HttpResponse("login")
+    return render(request, "login.html")
 
 def logout(request):
     return HttpResponse("logout")
