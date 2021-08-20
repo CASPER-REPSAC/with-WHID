@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-witdh, initial-scale=1, shrink-to-fit=no">
+        <title> django tutorial! </title>
+        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/common.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/main.common.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/main.login.css' %}">
+
+    </head>
+    <body style>
+        <div id="container" class="logn">
+            <form action="/login" method="post">
+                <p class="input">
+                    <input type="text" name="userid" maxlength="20" class="text" placeholder="아이디">
+                </p>
+                <p class="input">
+                    <input type="password" name="password" maxlength="20" class="text" placeholder="비밀번호">
+                </p>
+                <input type="hidden" name="redirect" value="/">
+                <p class="submit">
+                    <input type="submit" value="로그인" class="text">
+                </p>
+                <label class="autologin">
+                    <input type="checkbox" name="autologin" value="1">
+                    로그인 유지
+                </label>
+                <p class="find">
+                    <a href="/forgot">아이디/비밀번호 찾기</a>
+                </p>
+                <p class="register">
+                    <a href="/register">회원가입</a>
+                </p>
+            </form>
+        </div>
+        <address>
+            <ul class="links">
+                <li>
+                    <a href="">이용약관</a>
+                </li>
+                <li class="privacy">
+                    <a href="">개인정보처리방침</a>
+                </li>
+            </ul>
+        </address>
+    </body>
+</html>

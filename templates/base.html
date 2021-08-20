@@ -1,3 +1,4 @@
+  
 {% load static %}
 <!doctype html>
 <html lang="ko">
@@ -5,7 +6,25 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-witdh, initial-scale=1, shrink-to-fit=no">
         <title> django tutorial! </title>
+        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/style.css' %}">
     </head>
-    <body>
+    <body style="">
+        <aside>
+            <div class="login">
+              <a href="/login" class="button login">로그인</a>
+              <a href="/register" class="button register">회원가입</a>
+              <p class="find">
+                <a href="/forgot">아이디/비밀번호 찾기</a>
+              </p>
+              <hr>
+            </div>
+            <form class="search">
+              <p>To-do List</p>
+              
+              <div style="text-align: center;">calender??</div>
+            </form>
+            <div class="campuslist">
+            </div>
+          </aside>
     </body>
 </html>
