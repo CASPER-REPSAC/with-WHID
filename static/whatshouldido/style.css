@@ -45,7 +45,7 @@ aside > div.login > a.button.register {
 	color: #fff; background-color: #7a6563;
 }
 aside > div.login > p {
-	padding: 5px 5px 0 5px; width: 50%; box-sizing: border-box;
+	padding: 5px 5px 0 10px; width: 50%; box-sizing: border-box;
 }
 aside > div.login > p.find {
 	float: right; text-align: right;

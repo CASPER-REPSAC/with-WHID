@@ -1,0 +1,15 @@
+{% load socialaccount %}
+{% providers_media_js %}
+
+<h1> 일 벌리고 실천하기 </h1>
+
+<a href="/signup/register"> 회원가입 </a>
+<br>
+{% if user.is_authenticated %}
+<a href ="/signup/logout"></a>
+<br>
+{{user.first_name}} {{user.last_name}}님이 로그인 중
+{% else %}
+<a href="{% provider_login_url 'google' %}"> 구글 계정으로 로그인 </a>
+로그인 필요
+{% endif %}

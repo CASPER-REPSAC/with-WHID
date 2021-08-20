@@ -44,10 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whatshouldido',
 
+    #google-auth setting
     'django.contrib.sites',
+
+    #allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    #allauth provider
     'allauth.socialaccount.providers.google',
 ]
 
