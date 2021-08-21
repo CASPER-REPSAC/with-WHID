@@ -492,3 +492,21 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		height: 24px;
 	}
 }
+
+/* contents css */
+.nav-link{
+    color: var(--fontColor);
+    text-align: center;
+    font-weight: bold;
+}
+.recent-comment-box{
+    position: relative;
+    border: 1px solid var(--borderColor);
+    border-radius : 10px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
+
+    padding: 20px;
+    margin: 20px 0px;
+
+    width: 100%;
+}
