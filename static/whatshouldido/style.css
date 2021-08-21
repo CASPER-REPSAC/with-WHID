@@ -221,7 +221,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		top: 120px; right: 0;
 	}
 	section.init > div.wrap > h1 {
-		top: 150px; right: 394px; width: 380px;
+		top: 50%; right: 50%; width: 50%;
 	}
 	section.init > div.wrap > div.stores {
 		text-align: center;
@@ -267,10 +267,10 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 
 @media only screen and (min-width: 991px) and (max-width: 1280px) {
 	section.init > div.wrap {
-		width: 674px; height: 270px;
+		width: 70%; height: 270px;
 	}
 	section.init > div.wrap > h1 {
-		top: 1px; right: 350px; width: 320px;
+		top: 50%; right: 50%; width: 50%;
 	}
 	section.init > div.wrap > div.stores {
 		text-align: center;

@@ -8,14 +8,13 @@
             </div>
         </section>
         <section class="service white">
-            <div class="ym-wrapper">
-                <span class="year"></span>년
-                <span class="month"></span>월
-            </div>
-            <div class="calendar_nav">
-                <button class="nav-btn go-prev">&lt;</button>
-                <button class="nav-btn go-today">오늘</button>
-                <button class="nav-btn go-next">&gt;</button>
+            <div class="calendar_header">
+                <div class="calendar_nav">
+                    <button class="nav-btn go-prev">&lt;</button>
+                    <span class="year"></span>년
+                    <span class="month"></span>월
+                    <button class="nav-btn go-next">&gt;</button>
+                </div>
             </div>
             <div class="calendar_main">
                 <div class="days">
@@ -30,4 +29,5 @@
                 <div class="dates"></div>
             </div>
         <section>
+        <script src="{% static 'js/calender.js' %}"></script>
 {% endblock %}
