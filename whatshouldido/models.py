@@ -8,6 +8,30 @@
 from django.db import models
 
 
+class AccountEmailaddress(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    email = models.CharField(unique=True, max_length=254)
+    verified = models.IntegerField()
+    primary = models.IntegerField()
+    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailaddress'
+
+
+class AccountEmailconfirmation(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    created = models.DateTimeField()
+    sent = models.DateTimeField(blank=True, null=True)
+    key = models.CharField(unique=True, max_length=64)
+    email_address = models.ForeignKey(AccountEmailaddress, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailconfirmation'
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -43,12 +67,12 @@ class AuthUser(models.Model):
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
     username = models.CharField(unique=True, max_length=150, db_collation='latin1_swedish_ci')
-    nickname = models.CharField(unique=True, max_length=32)
-    name = models.CharField(max_length=32)
+    first_name = models.CharField(max_length=32)
     email = models.CharField(unique=True, max_length=64)
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
+    last_name = models.CharField(max_length=32)
 
     class Meta:
         managed = False
@@ -122,6 +146,15 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class DjangoSite(models.Model):
+    domain = models.CharField(unique=True, max_length=100)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'django_site'
+
+
 class GroupArticles(models.Model):
     groupid = models.ForeignKey('Studygroups', models.DO_NOTHING, db_column='groupID')  # Field name made lowercase.
     userid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='userid')
@@ -170,6 +203,59 @@ class Grouparticlecomments(models.Model):
     class Meta:
         managed = False
         db_table = 'grouparticlecomments'
+
+
+class SocialaccountSocialaccount(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    provider = models.CharField(max_length=30)
+    uid = models.CharField(max_length=191)
+    last_login = models.DateTimeField()
+    date_joined = models.DateTimeField()
+    extra_data = models.TextField()
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialaccount'
+        unique_together = (('provider', 'uid'),)
+
+
+class SocialaccountSocialapp(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    provider = models.CharField(max_length=30)
+    name = models.CharField(max_length=40)
+    client_id = models.CharField(max_length=191)
+    secret = models.CharField(max_length=191)
+    key = models.CharField(max_length=191)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp'
+
+
+class SocialaccountSocialappSites(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    socialapp_id = models.BigIntegerField()
+    site = models.ForeignKey(DjangoSite, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp_sites'
+        unique_together = (('socialapp_id', 'site'),)
+
+
+class SocialaccountSocialtoken(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    token = models.TextField()
+    token_secret = models.TextField()
+    expires_at = models.DateTimeField(blank=True, null=True)
+    account = models.ForeignKey(SocialaccountSocialaccount, models.DO_NOTHING)
+    app = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialtoken'
+        unique_together = (('app', 'account'),)
 
 
 class Studygroups(models.Model):

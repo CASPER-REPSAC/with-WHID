@@ -1,6 +1,8 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from django.http import HttpResponse
+from django.core.paginator import Paginator
+from . import forms, models
+
 # Create your views here.
 
 
@@ -10,17 +12,14 @@ def index(request):
     return render(request, 'base.html')
 
 def error(request):
-    return HttpResponse("error")
+    return render(request, "error.html")
 
 #Personal Feature
-def login(request):
-    return render(request, "login.html")
+def socialauth(request, exception):
+    return render(request, "socialauth.html")
 
 def calendar(request):
     return render(request, "calendar.html")
-
-def logout(request):
-    return HttpResponse("logout")
 
 def signup(request):
     return HttpResponse("signup")
@@ -35,8 +34,12 @@ def main(request):
 def calendardetail(request, date):
     return HttpResponse("calendarDetail")
 
-def groupsearch(request, search):
-    return HttpResponse("groupsearch")
+def groupsearch(request):
+    if request.method == 'GET':
+        group_list = models.Studygroups.objects.order_by('groupname')
+        context = {'studygroups' : group_list }
+    print(context)
+    return render(request,"group-search.html",context)
 
 
 #Group Feature
