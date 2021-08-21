@@ -150,13 +150,13 @@ section div.figures > div > p.number {
 	color: #292929; font-family: NanumSquareEB;
 }
 section div.figures > div > p.number > strong {
-	display: inline-block; margin-left: 8px; letter-spacing: -2px;
+	display: inline-block; margin-right: 8px; letter-spacing: -2px;
 }
 section div.figures > div > p.number > strong:first-child {
-	margin-left: 0;
+	margin-right: 0;
 }
 section div.figures > div > p.number > span {
-	display: inline-block; margin-left: 4px;
+	display: inline-block; margin-right: 4px;
 }
 section div.figures > div > p.description {
 	color: #444444;
@@ -215,16 +215,16 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 
 @media only screen and (min-width: 1281px) {
 	section.init > div.wrap {
-		width: 774px; height: 662px;
+		width: 774px; height: 270px;
 	}
 	section.init > div.wrap > div.device {
-		top: 120px; left: 0;
+		top: 120px; right: 0;
 	}
 	section.init > div.wrap > h1 {
-		top: 306px; left: 394px; width: 380px;
+		top: 50%; right: 50%; width: 50%;
 	}
 	section.init > div.wrap > div.stores {
-		top: 416px; left: 394px;
+		text-align: center;
 	}
 	section h1,
 	section h2 {
@@ -267,16 +267,16 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 
 @media only screen and (min-width: 991px) and (max-width: 1280px) {
 	section.init > div.wrap {
-		width: 674px; height: 622px;
+		width: 70%; height: 270px;
 	}
 	section.init > div.wrap > h1 {
-		top: 271px; left: 354px; width: 320px;
+		top: 50%; right: 50%; width: 50%;
 	}
 	section.init > div.wrap > div.stores {
-		top: 371px; left: 354px;
+		text-align: center;
 	}
 	section.init > div.wrap > div.device {
-		top: 80px; left: 0;
+		top: 80px; right: 0;
 	}
 	section h1,
 	section h2 {
@@ -322,10 +322,10 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		display: none;
 	}
 	aside {
-		width: 300px;
+		width: 350px;
 	}
 	aside > div.login {
-		padding: 40px 15px; width: 300px; height: 270px;
+		padding: 40px 15px; width: 350px; height: 270px;
 	}
 	aside > div.login > a.logo {
 		margin-bottom: 40px;
@@ -334,16 +334,17 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		height: 30px;
 	}
 	aside > form.search {
-		top: 270px; width: 300px;
+		top: 270px; width: 350px;
+		text-align: center;
 	}
 	aside > div.campuslist {
 		top: 361px;
 	}
 	section {
-		padding-right: 301px;
+		padding-left: 351px;
 	}
 	section.init > div.wrap > h1 {
-		position: absolute; text-align: left;
+		position: absolute; text-align: right;
 	}
 	section.init > div.wrap > div.stores {
 		position: absolute;
@@ -385,7 +386,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		padding: 10px; border-bottom: 1px solid #e3e3e3; background-color: #fff;
 	}
 	div.mobile > img.logo {
-		float: left; margin: 4px; height: 20px;
+		float: right; margin: 4px; height: 20px;
 	}
 	div.mobile > a {
 		float: right; padding: 0 8px; line-height: 28px; border-radius: 3px; color: #fff; font-size: 12px; background-color: #c62917;
@@ -477,7 +478,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		margin-top: 10px; line-height: 20px; font-size: 11px; vertical-align: top;
 	}
 	section.service div.figures > div > p.description {
-		float: left; margin-top: 10px; width: 80px; line-height: 20px; font-size: 11px; text-align: left;
+		float: right; margin-top: 10px; width: 80px; line-height: 20px; font-size: 11px; text-align: right;
 	}
 	section.community div.figures > div > p.description {
 		margin-top: 10px; font-size: 11px;

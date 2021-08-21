@@ -1,4 +1,3 @@
-  
 {% load static %}
 <!doctype html>
 <html lang="ko">
@@ -8,7 +7,7 @@
         <title> django tutorial! </title>
         <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/style.css' %}">
     </head>
-    <body style="">
+    <body>
         <aside>
             <div class="login">
               <a href="/login" class="button login">로그인</a>
@@ -26,5 +25,9 @@
             <div class="campuslist">
             </div>
           </aside>
+
+          {% block content %}
+          {% endblock content %}
+
     </body>
 </html>
