@@ -16,6 +16,9 @@ def error(request):
 def login(request):
     return render(request, "login.html")
 
+def calendar(request):
+    return render(request, "calendar.html")
+
 def logout(request):
     return HttpResponse("logout")
 
