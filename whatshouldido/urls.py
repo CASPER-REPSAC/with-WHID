@@ -4,21 +4,17 @@ from . import views
 app_name = 'whatshouldido'
 
 urlpatterns = [
-    #Default Page
+    #Main Page
     path('',views.index,name='index'),
     path('error/',views.error,name='error'),
-
-    #Personal Page
-    #path('social',views.login),
-    path('login/',views.login,name='login'),
-    path('signup/',views.signup, name='signup'),
+    path('signup/',views.signup, name='signup'), #for social login
     path('logout/',views.logout, name='logout'),
-    path('userinfo/',views.userinfo,name='userinfo'),
-
-    #Main Page
     path('start/',views.main,name='main'),
     path('asdf/',views.calendardetail,name='calendardetail'),
     path('',views.groupsearch,name='groupsearch'),
+
+    #Personal Page
+    path('userinfo/',views.userinfo,name='userinfo'),
 
     #Group Feature Page
     path('group/<int:pk>/writearticle',views.writearticle, name='writearticle'),
