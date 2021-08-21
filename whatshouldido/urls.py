@@ -16,6 +16,7 @@ urlpatterns = [
 
     #Personal Page
     path('userinfo/',views.userinfo,name='userinfo'),
+    path('calendar/',views.calendar,name='calendar'),
 
     #Group Feature Page
     path('group/<int:pk>/writearticle',views.writearticle, name='writearticle'),

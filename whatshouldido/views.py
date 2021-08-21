@@ -18,6 +18,9 @@ def error(request):
 def socialauth(request, exception):
     return render(request, "socialauth.html")
 
+def calendar(request):
+    return render(request, "calendar.html")
+
 def signup(request):
     return HttpResponse("signup")
 
