@@ -45,7 +45,7 @@ aside > div.login > a.button.register {
 	color: #fff; background-color: #7a6563;
 }
 aside > div.login > p {
-	padding: 5px 5px 0 5px; width: 50%; box-sizing: border-box;
+	padding: 5px 5px 0 10px; width: 50%; box-sizing: border-box;
 }
 aside > div.login > p.find {
 	float: right; text-align: right;
@@ -325,7 +325,9 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		width: 350px;
 	}
 	aside > div.login {
-		padding: 40px 15px; width: 350px; height: 270px;
+
+		padding: 20px 15px; width: 300px; height: 270px;
+
 	}
 	aside > div.login > a.logo {
 		margin-bottom: 40px;
@@ -492,4 +494,22 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 	section div.figures > div > p.icon > img {
 		height: 24px;
 	}
+}
+
+/* contents css */
+.nav-link{
+    color: var(--fontColor);
+    text-align: center;
+    font-weight: bold;
+}
+.recent-comment-box{
+    position: relative;
+    border: 1px solid var(--borderColor);
+    border-radius : 10px;
+    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
+
+    padding: 20px;
+    margin: 20px 0px;
+
+    width: 100%;
 }

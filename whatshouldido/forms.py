@@ -6,18 +6,17 @@ class AuthUserForm(forms.ModelForm):
 
     class Meta:
         model = AuthUser
-        fields = ['username','password','nickname','name','email','date_joined']
+        fields = ['username','password','first_name','last_name','email','date_joined']
         labels = {
             'username' : '아이디',
             'password' : '비밀번호',
-            'nickname' : '별명',
-            'name' : '실명',
+            'first_name' : '이름',
+            'last_name' : '성',
             'email' : '이메일',
             'date_joined' : '가입일',
         }
 
 class StudygroupsForm(forms.ModelForm):
-
     class Meta:
         model = Studygroups
         fields = ['groupname','grouppasscode','groupmaster']
@@ -53,11 +52,11 @@ class GroupArticlesForm(forms.ModelForm):
 class GroupAssignmentsForm(forms.ModelForm):
     class Meta:
         model = GroupAssignments
-        fields = ['groupassignment', 'groupassignmentdetail','groupassignmentlimut']
+        fields = ['groupassignment', 'groupassignmentdetail','groupassignmentlimit']
         labels = {
             'groupassignment' : '과제', 
             'groupassignmentdetail' : '과제 정보',
-            'groupassignmentlimut' : '과제 기한',
+            'groupassignmentlimit' : '과제 기한',
         }
 
 class GroupCalendarForm(forms.ModelForm):

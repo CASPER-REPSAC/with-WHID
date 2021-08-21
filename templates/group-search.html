@@ -1,0 +1,8 @@
+{% block contents %}
+{% if studygroups %}
+    {% for group in studygroups %}
+        {{ group.groupname }}
+        <br>
+    {% endfor %}
+{% endif %}
+{% endblock %}

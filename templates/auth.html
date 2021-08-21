@@ -1,0 +1,14 @@
+{% load socialaccount %}
+{% providers_media_js %}
+{% include "gomain.html" %}
+{% if user.is_authenticated %}
+    <a href="auth/logout" method='oauth2' class="button register"> 
+        {{user.last_name}}{{user.first_name}} 계정에서 로그아웃 
+    </a>
+    <div class="group-search">
+        <input type="text" class="group-search-input" placeholder="그룹 찾기">
+        <input type="submit" class="group-search-btn" value="검색" method="GET">
+    </div>
+{% else %}
+    <a href="{% provider_login_url 'google' %}" method='oauth2' class="button register"> 구글 계정으로 시작하기</a>
+{% endif %}
