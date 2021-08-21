@@ -13,11 +13,8 @@ def error(request):
     return HttpResponse("error")
 
 #Personal Feature
-def login(request):
-    return render(request, "social.html")
-
-def logout(request):
-    return HttpResponse("logout")
+def socialauth(request):
+    return render(request, "socialauth.html")
 
 def signup(request):
     return HttpResponse("signup")

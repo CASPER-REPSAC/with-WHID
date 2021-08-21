@@ -19,7 +19,6 @@ from whatshouldido import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('signup/',include('allauth.urls')),
     path('',include('whatshouldido.urls')),
-    #path('',views.index,name='login'),
+    path('auth/',include('allauth.urls')),
 ]
