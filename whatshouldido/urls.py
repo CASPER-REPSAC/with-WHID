@@ -8,11 +8,11 @@ urlpatterns = [
     #Main Page
     path('',views.index,name='index'),
     path('auth/logout/', LogoutView.as_view(),name='logout'),
+    path('search',views.StudygroupsView.as_view(),name='groupsearch'),
+
 
     #Pop-up
     path('error/',views.error,name='error'),
-
-    path('search/',views.groupsearch,name='groupsearch'),
 
     #Personal Page
     path('userinfo/',views.userinfo,name='userinfo'),

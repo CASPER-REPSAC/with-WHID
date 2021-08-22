@@ -26,6 +26,9 @@ class StudygroupsForm(forms.ModelForm):
             'groupmaster':'그룹장',
         }
 
+class GroupSearchForm(forms.Form):
+    search_word = forms.CharField(label='Search Word')
+
 class UsersGroupsMappingForm(forms.ModelForm):
 
     class Meta:

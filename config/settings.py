@@ -31,7 +31,7 @@ SECRET_KEY = json_secret_key #key 따로 관ㄹ
 DEBUG = True # 최종본에 False
 
 ALLOWED_HOSTS = ['*']
-
+APPEND_SLASH=False
 
 # Application definition
 

@@ -1,15 +1,44 @@
 from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.core.paginator import Paginator
-from . import forms, models
+from django.db.models import Q
+from django.views.generic.edit import FormView
+from django import forms
+from .forms import *
+from .models import *
 
-# Create your views here.
 
+class StudygroupsView(FormView):
+    form_class = GroupSearchForm
+    template_name = 'group-search.html'
+    def form_valid(self, form):
+        print(form)
+        searchWord = form.cleaned_data['search_word']
+        print(searchWord)
+        group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
+
+        context = {}
+        context['form'] = form
+        context['search_term'] = searchWord
+        context['studygroups'] = group_list
+        print(context)
+        return render(self.request, self.template_name, context)
+
+'''
+def groupsearch(request,search_term):
+    if request.method == 'GET':
+        searchWord = search_term.cleaned_data['search_word']
+        print(searchWord)
+        group_list = Studygroups.objects.order_by('groupname')
+        context = {'studygroups' : group_list }
+    print(context)
+    return render(request,"base.html",context)
+'''
 
 #Default Page
 def index(request):
     page = request.GET.get('page',1)
-    return render(request, 'base.html')
+    return render(request, 'calendar.html')
 
 def error(request):
     return render(request, "error.html")
@@ -21,9 +50,6 @@ def socialauth(request, exception):
 def calendar(request):
     return render(request, "calendar.html")
 
-def signup(request):
-    return HttpResponse("signup")
-
 def userinfo(request):
     return HttpResponse("userinfo")
 
@@ -33,14 +59,6 @@ def main(request):
 
 def calendardetail(request, date):
     return HttpResponse("calendarDetail")
-
-def groupsearch(request):
-    if request.method == 'GET':
-        group_list = models.Studygroups.objects.order_by('groupname')
-        context = {'studygroups' : group_list }
-    print(context)
-    return render(request,"base.html",context)
-
 
 #Group Feature
 def writearticle(request, group):
