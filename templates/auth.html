@@ -2,7 +2,7 @@
 {% providers_media_js %}
 {% include "gomain.html" %}
 {% if user.is_authenticated %}
-    <a href="auth/logout" method='oauth2' class="button register"> 
+    <a href="{% url 'whatshouldido:logout' %}" method='oauth2' class="button register"> 
         {{user.last_name}}{{user.first_name}} 계정에서 로그아웃 
     </a>
     <div class="group-search">

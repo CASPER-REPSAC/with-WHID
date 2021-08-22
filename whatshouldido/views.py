@@ -39,7 +39,7 @@ def groupsearch(request):
         group_list = models.Studygroups.objects.order_by('groupname')
         context = {'studygroups' : group_list }
     print(context)
-    return render(request,"group-search.html",context)
+    return render(request,"base.html",context)
 
 
 #Group Feature

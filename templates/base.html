@@ -22,9 +22,12 @@
             <div class="campuslist">
             </div>
           </aside>
-
-          {% block content %}
-          {% endblock content %}
-
+          {% if user.is_authenticated %}
+            {% if studygroups %}
+              {% include 'group-search.html' %}
+            {% else %}
+              {% include 'calendar.html' %}
+            {% endif %}
+          {% endif %}
     </body>
 </html>

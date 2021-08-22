@@ -7,7 +7,7 @@ app_name = 'whatshouldido'
 urlpatterns = [
     #Main Page
     path('',views.index,name='index'),
-    path('auth/logout/', LogoutView.as_view()),
+    path('auth/logout/', LogoutView.as_view(),name='logout'),
 
     #Pop-up
     path('error/',views.error,name='error'),
