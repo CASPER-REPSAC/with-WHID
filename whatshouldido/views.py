@@ -62,13 +62,17 @@ def calendarDetail(request, date_time: str):
             # 여기까진 calendar 랑 같음.
             queryset_list += models.GroupCalendar.objects \
                 .filter(groupid=mapping_model.groupidx) \
-                .filter(groupplanstart__gte=date, groupplanend__lte=date)
+                .filter(groupplanstart__lte=date+' 23:59:59', groupplanend__gte=date+' 00:00:00')
             # 다른 점은 추가된 새로운 필터인데, 조건 키워드라는게 따로 있더라,
             # __lte => less than or equal
             # __gte => greater than or equal
             # 이하, 이상의 의미이니, e 를 빼면, 각각 미만, 초과가 된다.
             # 자세한 것은 https://brownbears.tistory.com/63 에 Filter 에 조건 키워드 참고
-            # 블로그에 __lte, __gte 에 대한 설명이 반대로 되어있으니 주의
+            # 22일 부터 시작인 프로젝트는 22일로 검색이 안된다 23일로하면 된다...
+            # 아무래도 시간의 영향 같다.
+            # 그래서 날짜를 입력받으면 뒤에 시간 23:59:59, 00:00:00 을 붙여서
+            # 하루짜리 스터디도 조회할 수 있도록 하였다.
+        print(queryset_list)
     context = {'queryset_list': queryset_list}
     return render(request, "calendar-detail.html", context=context)
 
@@ -102,7 +106,14 @@ def writearticle(request, group):
 
 
 def makegroup(request):
-    return HttpResponse("makegroup")
+    if request.method == "POST":
+        form = forms.StudygroupsForm(request.POST)
+        if form.is_valid():
+            group = form.save(commit=False)
+            return redirect('group_info', pk=group.pk)
+    else:
+        form = {'form': forms.StudygroupsForm()}
+    return render(request, 'group-make.html', form)
 
 
 def managegroup(request, group):
@@ -110,4 +121,4 @@ def managegroup(request, group):
 
 
 def groupinfo(request, group):
-    return HttpResponse("groupinfo")
+    return HttpResponse("groupinfo",)
