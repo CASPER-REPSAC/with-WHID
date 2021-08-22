@@ -5,22 +5,23 @@ from . import views
 app_name = 'whatshouldido'
 
 urlpatterns = [
-    #Main Page
-    path('',views.index,name='index'),
+    # Main Page
+    path('', views.index, name='index'),
     path('auth/logout/', LogoutView.as_view()),
 
-    #Pop-up
-    path('error/',views.error,name='error'),
+    # Pop-up
+    path('error/', views.error, name='error'),
 
-    path('search/',views.groupsearch,name='groupsearch'),
+    path('search/', views.groupsearch, name='groupsearch'),
 
-    #Personal Page
-    path('userinfo/',views.userinfo,name='userinfo'),
-    path('calendar/',views.calendar,name='calendar'),
+    # Personal Page
+    path('userinfo/', views.userinfo, name='userinfo'),
+    path('calendar/', views.calendar, name='calendar'),
+    path('calendardetail/<str:date_time>', views.calendarDetail, name='calendardetail'),
 
-    #Group Feature Page
-    path('group/<int:pk>/writearticle',views.writearticle, name='writearticle'),
-    path('group/<int:pk>',views.groupinfo, name='group'),
-    path('test',views.managegroup,name='managegroup'), # How?
-    path('group/makegroup/',views.makegroup,name='makegroup'),
+    # Group Feature Page
+    path('group/<int:pk>/writearticle', views.writearticle, name='writearticle'),
+    path('group/<int:pk>', views.groupinfo, name='group'),
+    path('test', views.managegroup, name='managegroup'),  # How?
+    path('group/makegroup/', views.makegroup, name='makegroup'),
 ]
