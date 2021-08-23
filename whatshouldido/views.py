@@ -91,7 +91,7 @@ def main(request):
 
 # Main Page Feature
 
-
+# Group Feature
 def groupSearch(request):
     if request.method == 'GET':
         group_list = models.Studygroups.objects.order_by('groupname')
@@ -102,38 +102,48 @@ def groupSearch(request):
     return render(request, "group-search.html", context)
 
 
-# Group Feature
 def writeArticle(request, group):
     return HttpResponse("writearticle")
 
 
-def makeGroup(request):
-    # request 에서 pk 4 번 AuthUser instance 를 가져왔다고 해보자
+def groupMake(request):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = models.AuthUser.objects.get(pk=4)
     if request.method == "POST":
-        form = forms.StudygroupsForm(request.POST)
-        if form.is_valid():
-            group = form.save(commit=False)
+        group_form = forms.StudygroupsForm(request.POST)
+        if group_form.is_valid():
+            group = group_form.save(commit=False)
             group.groupmaster = user_id
-            # group.groupmaster = request.user
             group.save()
+            group_mapping = models.UsersGroupsMapping(
+                useridx=group.groupmaster,
+                groupidx=group)
+            group_mapping.save()
             return redirect('whatshouldido:groupinfo', pk=group.pk)
-    else:
-        form = forms.StudygroupsForm()
+    form = forms.StudygroupsForm()
     return render(request, 'group-make.html', {'form': form})
 
 
-def groupinfo(request, pk):
+def groupManage(request, pk):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = models.AuthUser.objects.get(pk=4)
+    group = get_object_or_404(models.Studygroups, pk=pk)
+    if request.method == "POST":
+        group_form = forms.StudygroupsForm(request.POST, instance=group)
+        if group_form.is_valid():
+            group = group_form.save(commit=False)
+            group.groupmaster = user_id
+            group.save()
+            return redirect('whatshouldido:groupinfo', pk=group.pk)
+    form = forms.StudygroupsForm(instance=group)
+    return render(request, 'group-manage.html', {'form': form})
+
+
+def groupInfo(request, pk):
     try:
         group_data = models.Studygroups.objects.get(groupid=pk)
         context = [group_data.groupname, group_data.groupmaster]
-    except :
+    except:
         return redirect('whatshouldido:error')
 
-    print(group_data)
-    print(context)
     return render(request, 'group-info.html', {'group_data': context})
-
-
-def manageGroup(request, group):
-    return HttpResponse("managegroup")

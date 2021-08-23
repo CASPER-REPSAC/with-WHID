@@ -21,7 +21,7 @@ urlpatterns = [
 
     # Group Feature Page
     path('group/<int:pk>/writearticle', views.writeArticle, name='writearticle'),
-    path('group/<int:pk>', views.groupinfo, name='groupinfo'),
-    path('test', views.manageGroup, name='managegroup'),  # How?
-    path('group/make', views.makeGroup, name='makegroup'),
+    path('group/<int:pk>', views.groupInfo, name='groupinfo'),
+    path('group/<int:pk>/manage', views.groupManage, name='groupmanage'),  # 이렇게. <-- How?
+    path('group/make', views. groupMake, name='groupmake'),
 ]
