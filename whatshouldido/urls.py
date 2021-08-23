@@ -9,7 +9,7 @@ urlpatterns = [
     path('',views.index,name='index'),
     path('auth/logout/', LogoutView.as_view(),name='logout'),
     path('search',views.StudygroupsView.as_view(),name='groupsearch'),
-
+    path('search/<int:pk>',views.join,name='join'),
 
     #Pop-up
     path('error/',views.error,name='error'),

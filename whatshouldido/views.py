@@ -35,6 +35,9 @@ def groupsearch(request,search_term):
     return render(request,"base.html",context)
 '''
 
+def join(request, pk):
+    return render(request, 'join.html')
+
 #Default Page
 def index(request):
     page = request.GET.get('page',1)

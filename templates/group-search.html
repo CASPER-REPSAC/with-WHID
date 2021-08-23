@@ -6,7 +6,7 @@
         </form>
         {% if studygroups%}
             {% for group in studygroups %}
-                {{ group.groupname }}
+                <a href="{% url 'whatshouldido:join' %}" method="get" value="{{ group.groupid }}">{{ group.groupname }}</a>
                 <br>
             {% endfor %}
         {% endif %}
