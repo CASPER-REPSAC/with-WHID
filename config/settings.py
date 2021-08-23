@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['*']
 APPEND_SLASH=False
 
 # Application definition
+SESSION_COOKIE_AGE = 600   
+SESSION_SAVE_EVERY_REQUEST = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -161,7 +163,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1
+SITE_ID = 2
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

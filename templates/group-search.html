@@ -4,9 +4,11 @@
             {{ form.as_table }}
             <input type="submit" value="Submit" class="btn btn-primary btn-sm">
         </form>
-        {% if studygroups%}
+        {% if studygroups %}
             {% for group in studygroups %}
-                <a href="{% url 'whatshouldido:join' %}" method="get" value="{{ group.groupid }}">{{ group.groupname }}</a>
+                <a href="{% url 'whatshouldido:join' pk=group.groupid %}" method="get" value="{{ group.groupid }}">
+                    {{ group.groupname }}
+                </a>
                 <br>
             {% endfor %}
         {% endif %}

@@ -1,1 +1,23 @@
-{% %}
+{% block contents %}
+    {% if user.is_authenticated %}
+        {% if studygroup %}
+            {% for group in studygroup %}
+            <form action="{% url 'whatshouldido:check' pk=group.groupid %}" method="POST"> 
+                {% csrf_token %}
+                <input id="passcode" type="text" name="passcode" placeholder="입장 코드를 입력하세요.">
+                <input type="submit" value="입력" class="btn btn-primary btn-sm">
+            </form>
+                그룹장 : {{ group.groupmaster.last_name }}{{ group.groupmaster.first_name }}
+                <br>
+                그룹명 : {{ group.groupname }}
+                <br>
+            {% endfor %}
+        {% endif %}
+        {% if groupss %}
+                {% for group in groupss %}
+                    {{ group.groupname }}에 가입했습니다.
+                    <br>
+                {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
