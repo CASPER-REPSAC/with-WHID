@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+            <section class="service white">
+                <div class="wrap">
+                    <h1>Write Article</h1>
+                        <form method="POST" class="post-form">{% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-default">[Save]</button>
+                    </form>
+                </div>
+            </section>
+{% endblock %}

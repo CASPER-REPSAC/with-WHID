@@ -43,13 +43,14 @@ class UsersGroupsMappingForm(forms.ModelForm):
 class GroupArticlesForm(forms.ModelForm):
     class Meta:
         model = GroupArticles
-        fields = ['userid', 'grouparticletitle', 'grouparticlecontent', 'grouparticlecategory', 'uploaddate']
+        # fields = ['userid', 'grouparticletitle', 'grouparticlecontent', 'grouparticlecategory', 'uploaddate']
+        fields = ['grouparticletitle', 'grouparticlecontent', 'grouparticlecategory', ]
         labels = {
-            'userid': '작성자',
+            # 'userid': '작성자',
             'grouparticletitle': '게시글 제목',
             'grouparticlecontent': '게시글 내용',
             'grouparticlecategory': '게시글 카테고리',
-            'uploaddate': '게시일자',
+            # 'uploaddate': '게시일자',
         }
 
 

@@ -273,6 +273,9 @@ class Studygroups(models.Model):
         managed = False
         db_table = 'studygroups'
 
+    def __str__(self):
+        return self.groupname
+
 
 class UsersGroupsMapping(models.Model):
     useridx = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='useridx')

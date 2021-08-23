@@ -2,6 +2,8 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.core.paginator import Paginator
 from whatshouldido import forms, models
+from django.utils import timezone
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
@@ -92,18 +94,74 @@ def main(request):
 # Main Page Feature
 
 # Group Feature
+def isGroupRegistered(user_id: int, group_id: int):
+    user = get_object_or_404(models.AuthUser, pk=user_id)
+    group = models.Studygroups.objects.get(pk=group_id)
+    return get_object_or_404(models.UsersGroupsMapping, useridx=user, groupidx=group)
+
+
+def groupArticleWrite(request, group):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = models.AuthUser.objects.get(pk=4)
+    if request.method == "POST":
+        article_form = forms.GroupArticlesForm(request.POST)
+        print(request.POST)
+        if article_form.is_valid():
+            article = article_form.save(commit=False)
+            article.uploaddate = timezone.now()
+            article.userid = user_id
+            article.groupid = get_object_or_404(models.Studygroups, pk=group)
+            article.save()
+            return redirect('whatshouldido:group-article-read', group=group, article=article.pk)
+    context = {'form': forms.GroupArticlesForm()}
+    return render(request, "group-article-write.html", context)
+
+
+# 만들다 맘
+def groupArticleEdit(request, group):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = models.AuthUser.objects.get(pk=4)
+    if request.method == "POST":
+        article_form = forms.GroupArticlesForm(request.POST)
+        print(request.POST)
+        if article_form.is_valid():
+            article = article_form.save(commit=False)
+            article.uploaddate = timezone.now()
+            article.userid = user_id
+            article.groupid = get_object_or_404(models.Studygroups, pk=group)
+            article.save()
+            return redirect('whatshouldido:group-article-read', group=group, article=article.pk)
+    context = {'form': forms.GroupArticlesForm()}
+    return render(request, "group-article-write.html", context)
+
+
+def groupArticleRead(request, group, article):
+    # try:
+    user_id = 4
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
+    isGroupRegistered(user_id, group)
+    article_data = models.GroupArticles.objects.get(groupid=article)
+    # except:
+    #    return redirect('whatshouldido:error')
+    context = model_to_dict(article_data)
+    context['groupname'] = article_data.groupid.groupname
+    context['authorname'] = article_data.userid.username
+
+    return render(request, 'group-article-read.html', {'article_data': context})
+
+
+def groupAssginCreate(request, group):
+    context = {}
+    return render(request, "group-assgin-create.html", context)
+
+
 def groupSearch(request):
     if request.method == 'GET':
         group_list = models.Studygroups.objects.order_by('groupname')
     else:
         group_list = None
     context = {'studygroups': group_list}
-    print(context)
     return render(request, "group-search.html", context)
-
-
-def writeArticle(request, group):
-    return HttpResponse("writearticle")
 
 
 def groupMake(request):
@@ -124,10 +182,10 @@ def groupMake(request):
     return render(request, 'group-make.html', {'form': form})
 
 
-def groupManage(request, pk):
+def groupManage(request, group):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = models.AuthUser.objects.get(pk=4)
-    group = get_object_or_404(models.Studygroups, pk=pk)
+    group = get_object_or_404(models.Studygroups, pk=group)
     if request.method == "POST":
         group_form = forms.StudygroupsForm(request.POST, instance=group)
         if group_form.is_valid():
@@ -139,9 +197,9 @@ def groupManage(request, pk):
     return render(request, 'group-manage.html', {'form': form})
 
 
-def groupInfo(request, pk):
+def groupInfo(request, group):
     try:
-        group_data = models.Studygroups.objects.get(groupid=pk)
+        group_data = models.Studygroups.objects.get(groupid=group)
         context = [group_data.groupname, group_data.groupmaster]
     except:
         return redirect('whatshouldido:error')
