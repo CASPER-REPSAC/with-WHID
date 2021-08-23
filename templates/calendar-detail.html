@@ -1,5 +1,8 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block calendarDetail %}
-    {{ queryset_list }}
-{% endblock %}
+
+     queryset  >>>   queryset.groupplanname :  queryset.groupplaninfo
+    {% for queryset in queryset_list %}
+        <p>
+        {{ queryset }} >>>  {{ queryset.groupplanname }} : {{ queryset.groupplaninfo }}
+        </p>
+    {% endfor %}

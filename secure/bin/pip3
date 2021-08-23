@@ -1,4 +1,4 @@
-#!/home/flood/dj-eruces-ango/secure/bin/python3
+#!/home/w00/dj-eruces-ango/secure/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

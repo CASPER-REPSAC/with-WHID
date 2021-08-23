@@ -7,21 +7,21 @@ app_name = 'whatshouldido'
 urlpatterns = [
     # Main Page
     path('', views.index, name='index'),
-    path('auth/logout/', LogoutView.as_view()),
+    path('auth/logout', LogoutView.as_view()),
 
     # Pop-up
-    path('error/', views.error, name='error'),
+    path('error', views.error, name='error'),
 
-    path('search/', views.groupsearch, name='groupsearch'),
+    path('search', views.groupSearch, name='groupsearch'),
 
     # Personal Page
-    path('userinfo/', views.userinfo, name='userinfo'),
-    path('calendar/', views.calendar, name='calendar'),
+    path('userinfo', views.userInfo, name='userinfo'),
+    path('calendar', views.calendar, name='calendar'),
     path('calendardetail/<str:date_time>', views.calendarDetail, name='calendardetail'),
 
     # Group Feature Page
-    path('group/<int:pk>/writearticle', views.writearticle, name='writearticle'),
-    path('group/<int:pk>', views.groupinfo, name='group'),
-    path('test', views.managegroup, name='managegroup'),  # How?
-    path('group/makegroup/', views.makegroup, name='makegroup'),
+    path('group/<int:pk>/writearticle', views.writeArticle, name='writearticle'),
+    path('group/<int:pk>', views.groupinfo, name='groupinfo'),
+    path('test', views.manageGroup, name='managegroup'),  # How?
+    path('group/make', views.makeGroup, name='makegroup'),
 ]

@@ -18,7 +18,7 @@ def error(request):
 
 
 # Personal Feature
-def socialauth(request, exception):
+def socialAuth(request, exception):
     return render(request, "socialauth.html")
 
 
@@ -62,7 +62,7 @@ def calendarDetail(request, date_time: str):
             # 여기까진 calendar 랑 같음.
             queryset_list += models.GroupCalendar.objects \
                 .filter(groupid=mapping_model.groupidx) \
-                .filter(groupplanstart__lte=date+' 23:59:59', groupplanend__gte=date+' 00:00:00')
+                .filter(groupplanstart__lte=date + ' 23:59:59', groupplanend__gte=date + ' 00:00:00')
             # 다른 점은 추가된 새로운 필터인데, 조건 키워드라는게 따로 있더라,
             # __lte => less than or equal
             # __gte => greater than or equal
@@ -77,11 +77,11 @@ def calendarDetail(request, date_time: str):
     return render(request, "calendar-detail.html", context=context)
 
 
-def signup(request):
+def signUp(request):
     return HttpResponse("signup")
 
 
-def userinfo(request):
+def userInfo(request):
     return HttpResponse("userinfo")
 
 
@@ -92,33 +92,48 @@ def main(request):
 # Main Page Feature
 
 
-def groupsearch(request):
+def groupSearch(request):
     if request.method == 'GET':
         group_list = models.Studygroups.objects.order_by('groupname')
-        context = {'studygroups': group_list}
+    else:
+        group_list = None
+    context = {'studygroups': group_list}
     print(context)
     return render(request, "group-search.html", context)
 
 
 # Group Feature
-def writearticle(request, group):
+def writeArticle(request, group):
     return HttpResponse("writearticle")
 
 
-def makegroup(request):
+def makeGroup(request):
+    # request 에서 pk 4 번 AuthUser instance 를 가져왔다고 해보자
+    user_id = models.AuthUser.objects.get(pk=4)
     if request.method == "POST":
         form = forms.StudygroupsForm(request.POST)
         if form.is_valid():
             group = form.save(commit=False)
-            return redirect('group_info', pk=group.pk)
+            group.groupmaster = user_id
+            # group.groupmaster = request.user
+            group.save()
+            return redirect('whatshouldido:groupinfo', pk=group.pk)
     else:
-        form = {'form': forms.StudygroupsForm()}
-    return render(request, 'group-make.html', form)
+        form = forms.StudygroupsForm()
+    return render(request, 'group-make.html', {'form': form})
 
 
-def managegroup(request, group):
+def groupinfo(request, pk):
+    try:
+        group_data = models.Studygroups.objects.get(groupid=pk)
+        context = [group_data.groupname, group_data.groupmaster]
+    except :
+        return redirect('whatshouldido:error')
+
+    print(group_data)
+    print(context)
+    return render(request, 'group-info.html', {'group_data': context})
+
+
+def manageGroup(request, group):
     return HttpResponse("managegroup")
-
-
-def groupinfo(request, group):
-    return HttpResponse("groupinfo",)
