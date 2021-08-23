@@ -58,7 +58,7 @@
 
 .date {
   cursor: pointer;
-  width: calc(100% / 7.1);
+  width: calc(100% / 7);
   height: 200px;
   text-align: left;
   border: 1px solid #333333;
