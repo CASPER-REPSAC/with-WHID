@@ -47,11 +47,11 @@ def check(request,pk):
         s_data = session.get_decoded()
         uid = s_data.get('_auth_user_id')
         if(uid == str(request.user.id) ):
-            #try:
-                print(1)
+            try:
                 group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
                 try:
                     test=group.get(grouppasscode=input_passcode)
+                    print(test.grouppasscode)
                 except:
                     return HttpResponse("입장 코드가 올바르지 않습니다.")
                 context={'groupss': group }
@@ -62,11 +62,9 @@ def check(request,pk):
                     return render(request, 'join.html', context)
                 else:
                     return HttpResponse("이미 가입된 그룹입니다.")
-            #except:
-            #    print(4)
-            #    return render(request, 'error.html')
+            except:
+                return render(request, 'error.html')
         else:
-            print('5')
             return render(request,'error.html')
 
 
