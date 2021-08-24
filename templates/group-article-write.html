@@ -5,9 +5,11 @@
                 <div class="wrap">
                     <h1>Write Article</h1>
                         <form method="POST" class="post-form">{% csrf_token %}
-                            {{ form.as_p }}
+                            <p><label for="id_groupassignmentdetail">과제 정보:</label> {{ form.groupassignment }}</p>
+                            <p><label for="id_groupassignmentdetail">과제 정보:</label>{{ form.groupassignmentdetail }}</p>
+                            <p><label for="id_groupassignmentlimit">과제 기한:</label>{{ form.groupassignmentlimit | date:'Y-m-d'}}</p>
                             <button type="submit" class="save btn btn-default">[Save]</button>
-                    </form>
+                        </form>
                 </div>
             </section>
 {% endblock %}

@@ -163,6 +163,7 @@ class GroupArticles(models.Model):
     userid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='userid')
     grouparticletitle = models.CharField(max_length=64)
     grouparticlecontent = models.CharField(max_length=150)
+
     grouparticlecategory = models.SmallIntegerField(db_column='groupArticleCategory')  # Field name made lowercase.
     uploaddate = models.DateTimeField()
 
@@ -198,7 +199,7 @@ class GroupCalendar(models.Model):
         db_table = 'group_calendar'
 
 
-class Grouparticlecomments(models.Model):
+class GroupArticleComments(models.Model):
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)

@@ -1,3 +1,5 @@
+from dataclasses import fields
+
 from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.core.paginator import Paginator
@@ -91,58 +93,51 @@ def main(request):
     return HttpResponse("main")
 
 
-# Main Page Feature
+# Main Page Feature\
 
 # Group Feature
-def isGroupRegistered(user_id: int, group_id: int):
-    user = get_object_or_404(models.AuthUser, pk=user_id)
-    group = models.Studygroups.objects.get(pk=group_id)
-    return get_object_or_404(models.UsersGroupsMapping, useridx=user, groupidx=group)
+def getUserObject_or_404(user_id: int, group_id: int):
+    user_object = get_object_or_404(models.AuthUser, pk=user_id)
+    group_object = models.Studygroups.objects.get(pk=group_id)
+    get_object_or_404(models.UsersGroupsMapping, useridx=user_object, groupidx=group_object)
+    return user_object
 
 
-def groupArticleWrite(request, group):
+def groupArticleCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
-    user_id = models.AuthUser.objects.get(pk=4)
+    user_id = getUserObject_or_404(4, group_id)
     if request.method == "POST":
         article_form = forms.GroupArticlesForm(request.POST)
-        print(request.POST)
         if article_form.is_valid():
             article = article_form.save(commit=False)
             article.uploaddate = timezone.now()
             article.userid = user_id
-            article.groupid = get_object_or_404(models.Studygroups, pk=group)
+            article.groupid = get_object_or_404(models.Studygroups, pk=group_id)
             article.save()
-            return redirect('whatshouldido:group-article-read', group=group, article=article.pk)
+            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
     context = {'form': forms.GroupArticlesForm()}
     return render(request, "group-article-write.html", context)
 
 
-# 만들다 맘
-def groupArticleEdit(request, group):
+def groupArticleEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
-    user_id = models.AuthUser.objects.get(pk=4)
+    user_id = getUserObject_or_404(4, group_id)
+    article = get_object_or_404(models.GroupArticles, id=article_id)
     if request.method == "POST":
-        article_form = forms.GroupArticlesForm(request.POST)
-        print(request.POST)
+        article_form = forms.GroupArticlesForm(request.POST, instance=article)
         if article_form.is_valid():
             article = article_form.save(commit=False)
-            article.uploaddate = timezone.now()
-            article.userid = user_id
-            article.groupid = get_object_or_404(models.Studygroups, pk=group)
+            # article.uploaddate = timezone.now() # 수정할 때 게시된 시간은 바뀌면 안되겠지
             article.save()
-            return redirect('whatshouldido:group-article-read', group=group, article=article.pk)
-    context = {'form': forms.GroupArticlesForm()}
+            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+    context = {'form': forms.GroupArticlesForm(instance=article)}
     return render(request, "group-article-write.html", context)
 
 
-def groupArticleRead(request, group, article):
-    # try:
-    user_id = 4
+def groupArticleRead(request, group_id, article_id):
+    getUserObject_or_404(4, group_id)
     # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
-    isGroupRegistered(user_id, group)
-    article_data = models.GroupArticles.objects.get(groupid=article)
-    # except:
-    #    return redirect('whatshouldido:error')
+    article_data = get_object_or_404(models.GroupArticles, id=article_id)
     context = model_to_dict(article_data)
     context['groupname'] = article_data.groupid.groupname
     context['authorname'] = article_data.userid.username
@@ -150,9 +145,50 @@ def groupArticleRead(request, group, article):
     return render(request, 'group-article-read.html', {'article_data': context})
 
 
-def groupAssginCreate(request, group):
-    context = {}
-    return render(request, "group-assgin-create.html", context)
+def groupAssignmentCreate(request, group_id):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = getUserObject_or_404(4, group_id)
+    if request.method == "POST":
+        article_form = forms.GroupAssignmentsForm(request.POST)
+
+        if article_form.is_valid():
+            print(1)
+            article = article_form.save(commit=False)
+            article.uploaddate = timezone.now()
+            article.userid = user_id
+            article.groupid = get_object_or_404(models.Studygroups, pk=group_id)
+            article.save()
+            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+
+    context = {'form': forms.GroupAssignmentsForm()}
+    print(context)
+    return render(request, "group-article-write.html", context)
+
+
+def groupAssignmentEdit(request, group_id, article_id):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = getUserObject_or_404(4, group_id)
+    article = get_object_or_404(models.GroupArticles, id=article_id)
+    if request.method == "POST":
+        article_form = forms.GroupArticlesForm(request.POST, instance=article)
+        if article_form.is_valid():
+            article = article_form.save(commit=False)
+            # article.uploaddate = timezone.now() # 수정할 때 게시된 시간은 바뀌면 안되겠지
+            article.save()
+            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+    context = {'form': forms.GroupArticlesForm(instance=article)}
+    return render(request, "group-article-write.html", context)
+
+
+def groupAssignmentRead(request, group_id, article_id):
+    getUserObject_or_404(4, group_id)
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
+    article_data = get_object_or_404(models.GroupArticles, id=article_id)
+    context = model_to_dict(article_data)
+    context['groupname'] = article_data.groupid.groupname
+    context['authorname'] = article_data.userid.username
+
+    return render(request, 'group-article-read.html', {'article_data': context})
 
 
 def groupSearch(request):

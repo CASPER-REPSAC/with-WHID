@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import widgets
-from whatshouldido.models import AuthUser, Studygroups, UsersGroupsMapping, GroupArticles, GroupAssignments, \
-    GroupCalendar
+from whatshouldido.models import *
 
 
 class AuthUserForm(forms.ModelForm):
@@ -55,6 +54,19 @@ class GroupArticlesForm(forms.ModelForm):
 
 
 class GroupAssignmentsForm(forms.ModelForm):
+    category_CHOICES = (
+        (2, '공지사항'),
+        (2, '카테고리 1'),
+        (3, '카테고리 2'),
+    )
+    # w00 위젯 생성중
+    groupassignmentlimit = forms.DateTimeField(widget=forms.SelectDateWidget())
+    favorite_colors = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=category_CHOICES,
+    )
+
     class Meta:
         model = GroupAssignments
         fields = ['groupassignment', 'groupassignmentdetail', 'groupassignmentlimit']
