@@ -63,7 +63,6 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
@@ -79,8 +78,6 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
-    def __str__(self):
-        return self.username
 
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -196,7 +193,7 @@ class GroupCalendar(models.Model):
         db_table = 'group_calendar'
 
 
-class GroupArticleComments(models.Model):
+class Grouparticlecomments(models.Model):
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)
@@ -205,7 +202,7 @@ class GroupArticleComments(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'grouparticlecomments' #studygroups가 아니라 별개의 테이블이 있음.
+        db_table = 'grouparticlecomments'
 
 
 class SocialaccountSocialaccount(models.Model):
@@ -270,9 +267,6 @@ class Studygroups(models.Model):
     class Meta:
         managed = False
         db_table = 'studygroups'
-    
-    def __str__(self):
-        return self.groupname 
 
 
 class UsersGroupsMapping(models.Model):

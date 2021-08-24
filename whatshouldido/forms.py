@@ -53,6 +53,22 @@ class GroupArticlesForm(forms.ModelForm):
         }
 
 class GroupAssignmentsForm(forms.ModelForm):
+    # 과제는 게시글이랑 다름. 과제는 카테고리 개념이 없으니 옮겨.
+    category_CHOICES = (
+        (2, '공지사항'),
+        (2, '카테고리 1'),
+        (3, '카테고리 2'),
+    )
+    # w00 위젯 생성중
+
+    groupassignmentlimit = forms.DateTimeField(widget=forms.SelectDateWidget())
+    favorite_colors = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=category_CHOICES,
+    )
+    # ========================
+
     class Meta:
         model = GroupAssignments
         fields = ['groupassignment', 'groupassignmentdetail','groupassignmentlimit']

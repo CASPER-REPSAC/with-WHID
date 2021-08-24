@@ -33,10 +33,11 @@ DEBUG = True # 최종본에 False
 ALLOWED_HOSTS = ['*']
 APPEND_SLASH=False
 
-# Application definition
+#Session
 SESSION_COOKIE_AGE = 600   
 SESSION_SAVE_EVERY_REQUEST = True
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -164,7 +165,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = 2
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
