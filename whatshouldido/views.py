@@ -17,16 +17,13 @@ class StudygroupsView(FormView):
     form_class = GroupSearchForm
     template_name = 'group-search.html'
     def form_valid(self, form):
-        print(form)
         searchWord = form.cleaned_data['search_word']
-        print(searchWord)
         group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
 
         context = {}
         context['form'] = form
         context['search_term'] = searchWord
         context['studygroups'] = group_list
-        print(context)
         return render(self.request, self.template_name, context)
 
 '''
@@ -41,12 +38,12 @@ def groupsearch(request,search_term):
 '''
 def check(request,pk):
     if request.method=="POST":
-        input_passcode = request.POST.get('passcode')
-        skey=request.session.session_key
-        session=Session.objects.get(session_key=skey)
-        s_data = session.get_decoded()
-        uid = s_data.get('_auth_user_id')
+        uid = request.session['_auth_user_id']
+        #skey=request.session.session_key
+        #sessions=Session.objects.get(session_key=skey)
+        #s_data = sessions.get_decoded()
         if(uid == str(request.user.id) ):
+            input_passcode = request.POST.get('passcode')
             try:
                 group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
                 try:
@@ -123,13 +120,19 @@ def calendar(request):
     # uid = request.META.get('HTTP_USER_ID')
     # user_id = models.SocialaccountSocialaccount.objects.filter(uid=uid)
     if request.method == 'GET':
-        usr_grp_mapping = models.UsersGroupsMapping.objects.filter(useridx=user_id)
+        usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
         for mapping_model in usr_grp_mapping:
-            queryset_list += models.GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
+            queryset_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
 
 def userinfo(request):
-    context = {'queryset_list': queryset_list}
-    return render(request, "calendar.html", context=context)
+    #if request.method=="POST":
+        uid = request.session['_auth_user_id']
+        model = UsersGroupsMapping.objects.filter(useridx=int(uid)).distinct()
+        context = {}
+        context['studygroups'] = model
+        return render(request, "mypage.html", context)
+    #else:
+    #    return HttpResponse("에러가 나부러쓰")
 
 #Main Page Feature
 def main(request):

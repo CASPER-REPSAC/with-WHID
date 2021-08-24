@@ -17,7 +17,7 @@ urlpatterns = [
     path('error/',views.error,name='error'),
 
     #Personal Page
-    path('userinfo/',views.userinfo,name='userinfo'),
+    path('userinfo',views.userinfo,name='userinfo'),
     path('calendar/',views.calendar,name='calendar'),
     path('calendardetail/<str:date_time>', views.calendarDetail, name='calendar-detail'),
 

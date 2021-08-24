@@ -1,5 +1,12 @@
 {% block content %}
     {% if user.is_authenticated %}
-    
+        {{user.last_name}}{{user.first_name}}의 그룹
+        <br>
+        {% if studygroups %}
+            {% for group in studygroups %}
+                {{ group.groupidx.groupname }}
+                <br>
+            {% endfor %}
+        {% endif %}
     {% endif %}
 {% endblock %}
