@@ -1,8 +1,16 @@
 {% block contents %}
-{% if studygroups %}
-    {% for group in studygroups %}
-        {{ group.groupname }}
-        <br>
-    {% endfor %}
-{% endif %}
+    {% if user.is_authenticated %}
+        <form action="/search" method="post"> {% csrf_token %}
+            {{ form.as_table }}
+            <input type="submit" value="Submit" class="btn btn-primary btn-sm">
+        </form>
+        {% if studygroups %}
+            {% for group in studygroups %}
+                <a href="{% url 'whatshouldido:join' pk=group.groupid %}" method="get" value="{{ group.groupid }}">
+                    {{ group.groupname }}
+                </a>
+                <br>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
 {% endblock %}
