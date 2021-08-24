@@ -82,6 +82,7 @@ class AuthUser(models.Model):
     def __str__(self):
         return self.username
 
+
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)

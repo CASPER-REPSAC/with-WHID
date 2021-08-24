@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    #allauth provider
+    #allauth providerSocialApp matching query does not exist
     'allauth.socialaccount.providers.google',
 ]
 
