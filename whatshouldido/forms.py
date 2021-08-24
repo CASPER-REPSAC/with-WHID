@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import widgets
-from whatshouldido.models import AuthUser, Studygroups, UsersGroupsMapping, GroupArticles, GroupAssignments, GroupCalendar
+from whatshouldido.models import AuthUser, GroupArticleComments, Studygroups, UsersGroupsMapping, GroupArticles, GroupAssignments, GroupCalendar
 
 class AuthUserForm(forms.ModelForm):
 
@@ -89,4 +89,16 @@ class GroupCalendarForm(forms.ModelForm):
             'groupplanlink' : '접속 정보',
             'groupplanstart' : '일정 시작 시간',
             'groupplanend' : '일정 종료 시간',
+        }
+
+class GroupArticleCommentsForm(forms.ModelForm):
+    class Meta:
+        model = GroupArticleComments
+        fields = ['articleid','commentid','writer','comment','writedate']
+        labels = {
+            'articleid':'글 번호',
+            'commentid':'댓글 번호',
+            'writer':'작성자',
+            'comment':'댓글',
+            'writedate':'작성일자',
         }

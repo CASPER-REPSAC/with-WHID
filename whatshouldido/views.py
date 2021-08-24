@@ -185,6 +185,7 @@ def groupArticleCreate(request, group_id):
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
     context = {'form': forms.GroupArticlesForm()}
     return render(request, "group-article-write.html", context)
+
 def groupArticleEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
@@ -198,6 +199,7 @@ def groupArticleEdit(request, group_id, article_id):
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
     context = {'form': forms.GroupArticlesForm(instance=article)}
     return render(request, "group-article-write.html", context)
+
 def groupArticleRead(request, group_id, article_id):
     getUserObject_or_404(4, group_id)
     # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
@@ -206,6 +208,7 @@ def groupArticleRead(request, group_id, article_id):
     context['groupname'] = article_data.groupid.groupname
     context['authorname'] = article_data.userid.username
     return render(request, 'group-article-read.html', {'article_data': context})
+
 def groupAssignmentCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
@@ -223,6 +226,7 @@ def groupAssignmentCreate(request, group_id):
     context = {'form': forms.GroupAssignmentsForm()}
     print(context)
     return render(request, "group-article-write.html", context)
+
 def groupAssignmentEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
@@ -256,6 +260,7 @@ def groupSearch(request):
         group_list = None
     context = {'studygroups': group_list}
     return render(request, "group-search.html", context)
+
 def groupMake(request):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = models.AuthUser.objects.get(pk=4)
@@ -288,7 +293,6 @@ def groupManage(request, group):
     form = forms.StudygroupsForm(instance=group)
     return render(request, 'group-manage.html', {'form': form})
 
-
 def groupInfo(request, group):
     try:
         group_data = models.Studygroups.objects.get(groupid=group)
@@ -297,3 +301,21 @@ def groupInfo(request, group):
         return redirect('whatshouldido:error')
 
     return render(request, 'group-info.html', {'group_data': context})
+
+def comments(request, pk, articleid):
+    commentModel = GroupArticleComments
+    uid = request.session['_auth_user_id']
+    article = get_object_or_404(GroupArticles, id=articleid)
+    if request.method == "POST":
+        form = GroupArticleCommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.articleid = article
+            comment.writedate = timezone.now()
+            comment.save()
+            return redirect('whatshouldido:comment', articleid=article.id)
+            #return render()
+    #elif request.method == "GET":
+    #삭제
+    else:
+        return HttpResponse("에러")

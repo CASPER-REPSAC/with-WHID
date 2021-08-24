@@ -194,6 +194,7 @@ class GroupCalendar(models.Model):
 
 
 class Grouparticlecomments(models.Model):
+    articleid = models.ForeignKey(GroupArticles, models.DO_NOTHING, db_column='articleid')
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)
