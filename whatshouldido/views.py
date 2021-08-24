@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.forms.models import model_to_dict
 from .forms import *
 from .models import *
+from django.http import QueryDict
 
 
 class StudygroupsView(FormView):
@@ -89,6 +90,7 @@ class MappingView(FormView):
         print(context)
         return render(self.request, self.template_name, context)
 
+
 def join(request, pk):
     if request.method == "GET":
         studygroup = Studygroups.objects.filter(groupid=pk).distinct()
@@ -98,17 +100,21 @@ def join(request, pk):
         }
         return render(request, 'join.html', context)
 
+
 # Default Page
 def index(request):
     page = request.GET.get('page', 1)
     return render(request, 'calendar.html')
 
+
 def error(request):
     return render(request, "error.html")
+
 
 # Personal Feature
 def socialauth(request, exception):
     return render(request, "socialauth.html")
+
 
 ####
 def userinfo(request):
@@ -119,6 +125,7 @@ def userinfo(request):
 
 def main(request):
     return HttpResponse("main")
+
 
 # Main Page Feature
 def calendar(request):
@@ -131,8 +138,8 @@ def calendar(request):
         for mapping_model in usr_grp_mapping:
             queryset_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
 
+
 def calendarDetail(request, date_time: str):
-    # (str) Sun Aug 22 2021 13:01:30 GMT+0900 종환이 형이 알려준  datetime 포맷
     # 우선 date_time 값를 url 로 'YYYY-MM-DD' 형식의 데이터를 입력받는다.
     date = date_time
     # calendar 처럼 user_id 가 4라고 가정하고,
@@ -157,13 +164,16 @@ def getUserObject_or_404(user_id: int, group_id: int):
     get_object_or_404(UsersGroupsMapping, useridx=user_object, groupidx=group_object)
     return user_object
 
+
 def groupArticleCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
     if request.method == "POST":
+        category = int(request.POST['grouparticlecategory'][0])
         article_form = GroupArticlesForm(request.POST)
         if article_form.is_valid():
             article = article_form.save(commit=False)
+            article.grouparticlecategory = category
             article.uploaddate = timezone.now()
             article.userid = user_id
             article.groupid = get_object_or_404(Studygroups, pk=group_id)
@@ -172,19 +182,25 @@ def groupArticleCreate(request, group_id):
     context = {'form': GroupArticlesForm()}
     return render(request, "group-article-write.html", context)
 
+
 def groupArticleEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
-    article = get_object_or_404(GroupArticles, id=article_id)
     if request.method == "POST":
-        article_form = GroupArticlesForm(request.POST, instance=article)
+        category = int(request.POST['grouparticlecategory'][0])
+        article_form = GroupArticlesForm(request.POST)
         if article_form.is_valid():
             article = article_form.save(commit=False)
-            # article.uploaddate = timezone.now() # 수정할 때 게시된 시간은 바뀌면 안되겠지
+            article.grouparticlecategory = category
+            article.uploaddate = timezone.now()
+            article.userid = user_id
+            article.groupid = get_object_or_404(Studygroups, pk=group_id)
             article.save()
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
-    context = {'form': GroupArticlesForm(instance=article)}
+    article = get_object_or_404(GroupArticles, pk=article_id)
+    context = {'form': GroupArticlesForm(article)}
     return render(request, "group-article-write.html", context)
+
 
 def groupArticleRead(request, group_id, article_id):
     getUserObject_or_404(4, group_id)
@@ -195,6 +211,7 @@ def groupArticleRead(request, group_id, article_id):
     context['authorname'] = article_data.userid.username
     return render(request, 'group-article-read.html', {'article_data': context})
 
+
 def groupAssignmentCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
@@ -202,7 +219,6 @@ def groupAssignmentCreate(request, group_id):
         article_form = GroupAssignmentsForm(request.POST)
 
         if article_form.is_valid():
-            print(1)
             article = article_form.save(commit=False)
             article.uploaddate = timezone.now()
             article.userid = user_id
@@ -210,8 +226,8 @@ def groupAssignmentCreate(request, group_id):
             article.save()
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
     context = {'form': GroupAssignmentsForm()}
-    print(context)
     return render(request, "group-article-write.html", context)
+
 
 def groupAssignmentEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
@@ -227,6 +243,7 @@ def groupAssignmentEdit(request, group_id, article_id):
     context = {'form': GroupArticlesForm(instance=article)}
     return render(request, "group-article-write.html", context)
 
+
 def groupAssignmentRead(request, group_id, article_id):
     getUserObject_or_404(4, group_id)
     # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
@@ -237,6 +254,7 @@ def groupAssignmentRead(request, group_id, article_id):
 
     return render(request, 'group-article-read.html', {'article_data': context})
 
+
 def groupSearch(request):
     if request.method == 'GET':
         group_list = Studygroups.objects.order_by('groupname')
@@ -244,6 +262,7 @@ def groupSearch(request):
         group_list = None
     context = {'studygroups': group_list}
     return render(request, "group-search.html", context)
+
 
 def groupCreate(request):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
@@ -262,6 +281,7 @@ def groupCreate(request):
     form = StudygroupsForm()
     return render(request, 'group-make.html', {'form': form})
 
+
 def groupInfo(request, group_id):
     try:
         group_data = Studygroups.objects.get(groupid=group_id)
@@ -270,6 +290,7 @@ def groupInfo(request, group_id):
         return redirect('whatshouldido:error')
 
     return render(request, 'group-info.html', {'group_data': context})
+
 
 def groupManage(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자

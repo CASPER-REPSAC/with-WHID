@@ -45,24 +45,21 @@ class UsersGroupsMappingForm(forms.ModelForm):
 class GroupArticlesForm(forms.ModelForm):
     # 과제는 게시글이랑 다름. 과제는 카테고리 개념이 없으니 옮겨.
     category_CHOICES = (
-        (2, '공지사항'),
+        (1, '공지사항'),
         (2, '카테고리 1'),
         (3, '카테고리 2'),
     )
     # w00 위젯 생성중
-
-    groupassignmentlimit = forms.DateTimeField(widget=forms.SelectDateWidget())
-    favorite_colors = forms.MultipleChoiceField(
-        required=False,
-        widget=forms.CheckboxSelectMultiple,
+    grouparticlecategory = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.SelectMultiple,
         choices=category_CHOICES,
     )
 
-    # ========================
     class Meta:
         model = GroupArticles
         # fields = ['userid', 'grouparticletitle', 'grouparticlecontent', 'grouparticlecategory', 'uploaddate']
-        fields = ['grouparticletitle', 'grouparticlecontent', 'grouparticlecategory']
+        fields = ['grouparticletitle', 'grouparticlecontent']
         labels = {
             #'userid': '작성자',
             'grouparticletitle': '게시글 제목',
@@ -73,6 +70,7 @@ class GroupArticlesForm(forms.ModelForm):
 
 
 class GroupAssignmentsForm(forms.ModelForm):
+    groupassignmentlimit = forms.DateTimeField(widget=forms.SelectDateWidget())
     class Meta:
         model = GroupAssignments
         fields = ['groupassignment', 'groupassignmentdetail', 'groupassignmentlimit']
