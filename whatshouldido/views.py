@@ -152,7 +152,6 @@ def groupAssignmentCreate(request, group_id):
         article_form = forms.GroupAssignmentsForm(request.POST)
 
         if article_form.is_valid():
-            print(1)
             article = article_form.save(commit=False)
             article.uploaddate = timezone.now()
             article.userid = user_id
