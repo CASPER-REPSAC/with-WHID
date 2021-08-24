@@ -16,11 +16,31 @@
           </div>
             <form class="assignment-search">
               <p>과제 목록</p>
-              <div style="text-align: center;">calender??</div>
+              <input type="text" name="name" placeholder="검색" autocomplete="off">
             </form>
-            <div class="campuslist">
+            <div class="todolist">
+              <a href="/" style="display: block;"><span class="name">과제1</span><span class="count">08.20~08.31</span></a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
+              <a href="/">test</a>
             </div>
           </aside>
+
+          <section class="init">
+            <div class="wrap">
+                <h1><strong>미정</strong></h1>
+            </div>
+        </section>
           {% if user.is_authenticated %}
             {% block content %}
             {% endblock %}
