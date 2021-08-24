@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block contents %}
-        <link rel="stylesheet" href="{% static '/whatshouldido/calendar.css' %}">
+{% block content %}
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/whatshouldido/calendar.css' %}">
         <section class="init">
             <div class="wrap">
                 <h1><strong>미정</strong></h1>
@@ -28,6 +29,6 @@
                 </div>
                 <div class="dates"></div>
             </div>
-        </section>
+        <section>
         <script src="{% static 'js/calender.js' %}"></script>
 {% endblock %}
