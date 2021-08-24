@@ -163,6 +163,7 @@ def groupAssignmentCreate(request, group_id):
     return render(request, "group-assgin-create.html", context)
 
 
+
 def groupAssignmentEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)

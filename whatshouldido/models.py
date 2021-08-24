@@ -278,6 +278,7 @@ class Studygroups(models.Model):
         return self.groupname
 
 
+
 class UsersGroupsMapping(models.Model):
     useridx = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='useridx')
     groupidx = models.ForeignKey(Studygroups, models.DO_NOTHING, db_column='groupidx')

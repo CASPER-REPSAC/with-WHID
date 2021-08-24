@@ -27,6 +27,7 @@ urlpatterns = [
     path('group/<int:group_id>/assign/<int:assign_id>', views.groupAssignmentRead, name='group-assignment-read'),
     path('group/<int:group_id>/assign/<int:assign_id>/edit', views.groupAssignmentEdit, name='group-assignment-edit'),
 
+
     path('group/make', views.groupMake, name='groupmake'),
     path('group/<int:group_id>', views.groupInfo, name='groupinfo'),
     path('group/<int:group_id>/manage', views.groupManage, name='groupmanage'),  # 이렇게. <-- How?

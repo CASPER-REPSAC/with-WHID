@@ -67,6 +67,7 @@ class GroupAssignmentsForm(forms.ModelForm):
         choices=category_CHOICES,
     )
 
+
     class Meta:
         model = GroupAssignments
         fields = ['groupassignment', 'groupassignmentdetail', 'groupassignmentlimit']
