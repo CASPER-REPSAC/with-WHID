@@ -63,6 +63,7 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
+    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     password = models.CharField(max_length=128, db_collation='latin1_swedish_ci')
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()

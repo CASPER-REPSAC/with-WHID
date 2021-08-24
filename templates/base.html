@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-witdh, initial-scale=1, shrink-to-fit=no">
         <title> 일 벌리고 실천하기 </title>
         <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/style.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/search.css' %}">
         <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     </head>
     <body>
@@ -15,16 +14,16 @@
               {% include "auth.html" %}
               <hr>
           </div>
-            <form class="search">
+            <form class="assignment-search">
               <p>과제 목록</p>
               <div style="text-align: center;">calender??</div>
             </form>
             <div class="campuslist">
             </div>
           </aside>
-
-          {% block content %}
-          {% endblock content %}
-
+          {% if user.is_authenticated %}
+            {% block content %}
+            {% endblock %}
+          {% endif %}
     </body>
 </html>
