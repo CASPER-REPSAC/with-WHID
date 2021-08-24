@@ -78,6 +78,9 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
+    def __str__(self):
+        return self.username
+
 
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -160,6 +163,7 @@ class GroupArticles(models.Model):
     userid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='userid')
     grouparticletitle = models.CharField(max_length=64)
     grouparticlecontent = models.CharField(max_length=150)
+
     grouparticlecategory = models.SmallIntegerField(db_column='groupArticleCategory')  # Field name made lowercase.
     uploaddate = models.DateTimeField()
 
@@ -171,7 +175,8 @@ class GroupArticles(models.Model):
 class GroupAssignments(models.Model):
     groupid = models.ForeignKey('Studygroups', models.DO_NOTHING, db_column='groupID')  # Field name made lowercase.
     groupassignment = models.CharField(db_column='groupAssignment', max_length=32)  # Field name made lowercase.
-    groupassignmentdetail = models.CharField(db_column='groupAssignmentdetail', max_length=500)  # Field name made lowercase.
+    groupassignmentdetail = models.CharField(db_column='groupAssignmentdetail',
+                                             max_length=500)  # Field name made lowercase.
     groupassignmentlimit = models.DateTimeField(db_column='groupAssignmentlimit')  # Field name made lowercase.
 
     class Meta:
@@ -184,7 +189,8 @@ class GroupCalendar(models.Model):
     groupplanid = models.AutoField(db_column='groupPlanid', primary_key=True)  # Field name made lowercase.
     groupplanname = models.CharField(db_column='groupPlanname', max_length=64)  # Field name made lowercase.
     groupplaninfo = models.CharField(db_column='groupPlaninfo', max_length=128)  # Field name made lowercase.
-    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True,
+                                     null=True)  # Field name made lowercase.
     groupplanstart = models.DateTimeField(db_column='groupPlanstart')  # Field name made lowercase.
     groupplanend = models.DateTimeField(db_column='groupPlanend')  # Field name made lowercase.
 
@@ -193,7 +199,7 @@ class GroupCalendar(models.Model):
         db_table = 'group_calendar'
 
 
-class Grouparticlecomments(models.Model):
+class GroupArticleComments(models.Model):
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)
@@ -267,6 +273,9 @@ class Studygroups(models.Model):
     class Meta:
         managed = False
         db_table = 'studygroups'
+
+    def __str__(self):
+        return self.groupname
 
 
 class UsersGroupsMapping(models.Model):

@@ -17,14 +17,21 @@
           </div>
             <form class="search">
               <p>과제 목록</p>
-              <div style="text-align: center;">calender??</div>
+              <div style="text-align: center;">
+                  {% for queryset in queryset_list %}
+                    <p>{{ queryset.groupplanname }}</p>
+                  {% endfor %}
+              </div>
             </form>
             <div class="campuslist">
             </div>
+
+
+
           </aside>
 
-          {% block content %}
-          {% endblock content %}
+                    {% block contents %}
+                    {% endblock contents %}
 
     </body>
 </html>
