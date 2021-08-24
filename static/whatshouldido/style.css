@@ -71,19 +71,19 @@ aside > form.search > input:focus {
 aside > form.search > input::-ms-clear {
 	display: none;
 }
-aside > div.todolist {
+aside > div.campuslist {
 	position: relative; z-index: 10;
 }
-aside > div.todolist > a {
+aside > div.campuslist > a {
 	display: block; padding: 0 15px; width: 100%; height: 50px; line-height: 50px; box-sizing: border-box; border-bottom: 1px solid #e3e3e3;
 }
-aside > div.todolist > a:hover {
+aside > div.campuslist > a:hover {
 	background-color: #f5f5f5;
 }
-aside > div.todolist > a > span.name {
+aside > div.campuslist > a > span.name {
 	color: #444444; font-size: 14px;
 }
-aside > div.todolist > a > span.count {
+aside > div.campuslist > a > span.count {
 	float: right; color: #a6a6a6; font-size: 12px;
 }
 
@@ -103,7 +103,7 @@ section.init > div.wrap > div.device > div.screen {
 	position: relative; z-index: 1; border: 2px solid #d6d6d6; border-bottom: 0; border-radius: 18px 18px 0 0; background-color: #fff; overflow: hidden;
 }
 section.init > div.wrap > div.device > div.screen > div.image {
-	position: absolute;
+	position: absolute; background: transparent url('/images/about/screen.png') no-repeat;
 }
 section.init > div.wrap > div.stores {
 	font-size: 0;
@@ -327,7 +327,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 	}
 	aside > div.login {
 
-		padding: 20px 15px; width: 350px; height: 270px;
+		padding: 20px 15px; width: 300px; height: 270px;
 
 	}
 	aside > div.login > a.logo {
@@ -340,7 +340,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 		top: 270px; width: 350px;
 		text-align: center;
 	}
-	aside > div.todolist {
+	aside > div.campuslist {
 		top: 361px;
 	}
 	section {
@@ -416,7 +416,7 @@ section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
 	aside > form.search {
 		display: none;
 	}
-	aside > div.todolist {
+	aside > div.campuslist {
 		top: 255px;
 	}
 	section.init > div.wrap > h1 {
