@@ -149,19 +149,18 @@ def groupAssignmentCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
     if request.method == "POST":
-        article_form = forms.GroupAssignmentsForm(request.POST)
+        assign_form = forms.GroupAssignmentsForm(request.POST)
 
-        if article_form.is_valid():
-            article = article_form.save(commit=False)
-            article.uploaddate = timezone.now()
-            article.userid = user_id
-            article.groupid = get_object_or_404(models.Studygroups, pk=group_id)
-            article.save()
-            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+        if assign_form.is_valid():
+            assign = assign_form.save(commit=False)
+            assign.uploaddate = timezone.now()
+            assign.userid = user_id
+            assign.groupid = get_object_or_404(models.Studygroups, pk=group_id)
+            assign.save()
+            return redirect('whatshouldido:group-assignment-read', group_id=group_id, article_id=assign.pk)
 
     context = {'form': forms.GroupAssignmentsForm()}
-    print(context)
-    return render(request, "group-article-write.html", context)
+    return render(request, "group-assgin-create.html", context)
 
 
 def groupAssignmentEdit(request, group_id, article_id):
@@ -174,7 +173,7 @@ def groupAssignmentEdit(request, group_id, article_id):
             article = article_form.save(commit=False)
             # article.uploaddate = timezone.now() # 수정할 때 게시된 시간은 바뀌면 안되겠지
             article.save()
-            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+            return redirect('whatshouldido:group-assignment-read', group_id=group_id, article_id=article.pk)
     context = {'form': forms.GroupArticlesForm(instance=article)}
     return render(request, "group-article-write.html", context)
 

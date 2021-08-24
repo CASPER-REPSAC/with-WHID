@@ -285,3 +285,4 @@ class UsersGroupsMapping(models.Model):
     class Meta:
         managed = False
         db_table = 'users_groups_mapping'
+

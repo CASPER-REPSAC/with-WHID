@@ -23,9 +23,9 @@ urlpatterns = [
     path('group/<int:group_id>/article/<int:article_id>', views.groupArticleRead, name='group-article-read'),
     path('group/<int:group_id>/article/<int:article_id>/edit', views.groupArticleEdit, name='group-article-edit'),
 
-    path('group/<int:group_id>/assign/create', views.groupAssignmentCreate, name='group-article-create'),
-    path('group/<int:group_id>/assign/<int:assign_id>', views.groupAssignmentRead, name='group-article-read'),
-    path('group/<int:group_id>/assign/<int:assign_id>/edit', views.groupAssignmentEdit, name='group-article-edit'),
+    path('group/<int:group_id>/assign/create', views.groupAssignmentCreate, name='group-assignment-create'),
+    path('group/<int:group_id>/assign/<int:assign_id>', views.groupAssignmentRead, name='group-assignment-read'),
+    path('group/<int:group_id>/assign/<int:assign_id>/edit', views.groupAssignmentEdit, name='group-assignment-edit'),
 
     path('group/make', views.groupMake, name='groupmake'),
     path('group/<int:group_id>', views.groupInfo, name='groupinfo'),
