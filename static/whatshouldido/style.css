@@ -44,6 +44,7 @@ aside > div.login > a.logo > img {
 aside > div.login > a.button {
 	display: block;
 	margin-bottom: 5px;
+	border-radius: 5px;
 	height: 40px; line-height: 40px;
 	box-sizing: border-box;
 	font-size: 14px; font-weight: bold; text-align: center;
