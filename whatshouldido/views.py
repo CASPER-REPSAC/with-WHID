@@ -96,7 +96,7 @@ def join(request, pk):
 # Default Page
 def index(request):
     page = request.GET.get('page', 1)
-    if dict(request.session):
+    if '_auth_user_id' in dict(request.session):
         queryset_list = []
         if request.method == 'GET':
             user_id = int(request.session['_auth_user_id'])
