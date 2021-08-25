@@ -309,7 +309,6 @@ def groupSearch(request):
     context = {'studygroups': group_list}
     return render(request, "group-search.html", context)
 
-
 def groupCreate(request):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = get_object_or_404(AuthUser, pk=4)
