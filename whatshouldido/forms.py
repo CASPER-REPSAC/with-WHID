@@ -95,11 +95,12 @@ class GroupCalendarForm(forms.ModelForm):
 class GroupArticleCommentsForm(forms.ModelForm):
     class Meta:
         model = GroupArticleComments
-        fields = ['articleid','commentid','writer','comment','writedate']
+        # fields = ['articleid','commentid','writer','comment','writedate']
+        fields = ['comment']
         labels = {
-            'articleid':'글 번호',
-            'commentid':'댓글 번호',
-            'writer':'작성자',
+            # 'articleid':'글 번호',
+            # 'commentid':'댓글 번호',
+            # 'writer':'작성자',
             'comment':'댓글',
-            'writedate':'작성일자',
+            # 'writedate':'작성일자',
         }

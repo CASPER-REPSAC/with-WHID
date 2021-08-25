@@ -78,6 +78,8 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
+    def __str__(self):
+        return self.username
 
 
 class AuthUserGroups(models.Model):
@@ -158,7 +160,8 @@ class DjangoSite(models.Model):
 
 class GroupArticles(models.Model):
     id = models.BigAutoField(primary_key=True)
-    groupid = models.ForeignKey('Studygroups', related_name='id', db_column='groupID',on_delete=models.CASCADE)  # Field name made lowercase.
+    groupid = models.ForeignKey('Studygroups', related_name='id', db_column='groupID',
+                                on_delete=models.CASCADE)  # Field name made lowercase.
     userid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='userid')
     grouparticletitle = models.CharField(max_length=64)
     grouparticlecontent = models.CharField(max_length=150)
@@ -201,12 +204,12 @@ class GroupCalendar(models.Model):
 
 
 class GroupArticleComments(models.Model):
-    articleid = models.ForeignKey(GroupArticles, related_name='commentid', db_column='articleid', on_delete=models.CASCADE)
+    articleid = models.ForeignKey(GroupArticles, related_name='commentid', db_column='articleid',
+                                  on_delete=models.CASCADE)
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)
     writedate = models.DateTimeField()
-    is_talkback = models.IntegerField()
 
     class Meta:
         managed = False
