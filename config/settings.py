@@ -30,7 +30,7 @@ SECRET_KEY = json_secret_key #key 따로 관ㄹ
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # 최종본에 False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['test.floodnut.com','127.0.0.1']
 APPEND_SLASH=False
 
 #Session
@@ -164,10 +164,11 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 3
+SITE_ID = 2
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/' 
 ACCOUNT_LOGOUT_REDIRECT_URL = "/" 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+USE_X_FORWARDED_HOST = True

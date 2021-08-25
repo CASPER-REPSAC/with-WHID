@@ -41,32 +41,33 @@ def groupsearch(request,search_term):
 '''
 
 
-def check(request, pk):
-    if request.method == "POST":
-        uid = int(request.session['_auth_user_id'])
-        if uid != str(request.user.id):
-            return render(request, 'error.html')
-        # skey=request.session.session_key
-        # sessions=Session.objects.get(session_key=skey)
-        # s_data = sessions.get_decoded()
-        else:
+def check(request,pk):
+    if request.method=="POST":
+        uid = request.session['_auth_user_id']
+        #skey=request.session.session_key
+        #sessions=Session.objects.get(session_key=skey)
+        #s_data = sessions.get_decoded()
+        if(uid == str(request.user.id) ):
             input_passcode = request.POST.get('passcode')
             try:
                 group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
                 try:
-                    test = group.get(grouppasscode=input_passcode)
+                    test=group.get(grouppasscode=input_passcode)
+                    print(test.grouppasscode)
                 except:
                     return HttpResponse("입장 코드가 올바르지 않습니다.")
-                context = {'groupss': group}
+                context={'groupss': group }
                 user = AuthUser.objects.get(id=int(uid))
                 groups = Studygroups.objects.get(groupid=pk)
-                mapping = UsersGroupsMapping.objects.get_or_create(useridx=user, groupidx=groups)
-                if (mapping[1] == True):
+                mapping = UsersGroupsMapping.objects.get_or_create(useridx=user,groupidx=groups)
+                if(mapping[1]==True):
                     return render(request, 'join.html', context)
                 else:
                     return HttpResponse("이미 가입된 그룹입니다.")
             except:
                 return render(request, 'error.html')
+        else:
+            return render(request,'error.html')
 
 
 class MappingView(FormView):
