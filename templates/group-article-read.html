@@ -1,11 +1,25 @@
-
-{% block contents %}
+{% extends 'base.html' %}
+{% block content %}
     <section class="service white">
         <div class="wrap">
             <h1>Article Read</h1>
             {% for key, value in article_data.items %}
                 <p>article_data.{{ key }} : {{ value }}</p>
             {% endfor %}
+            <br>
+            ################# COMMENT #################
+            {% for comment in comments %}
+                    <form method="POST" action="{{ article_data.id }}/comment/delete" class="post-form">{% csrf_token %}
+                <input type="hidden" name="commentid" value="{{ comment.commentid }}">
+                        <p>{{ comment.writer }} | {{ comment.comment }} | {{ comment.writedate }}   ||
+                    <button type="submit" class="save btn btn-default">[Delete]</button></p>
+                </form>
+            {% endfor %}
+            <br>
+            <form method="POST" action="{{ article_data.id }}/comment/create" class="post-form">{% csrf_token %}
+                {{ comment_form }}
+                <button type="submit" class="save btn btn-default">[Save]</button>
+            </form>
         </div>
     </section>
-{% endblock %} 
+{% endblock %}

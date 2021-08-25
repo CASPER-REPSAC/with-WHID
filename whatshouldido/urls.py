@@ -18,7 +18,7 @@ urlpatterns = [
 
     # Personal Page
     path('userinfo/', views.userinfo, name='userinfo'),
-    path('calendar/', views.calendar, name='calendar'),
+    # path('calendar/', views.calendar, name='calendar'),
     path('calendardetail/<str:date_time>', views.calendarDetail, name='calendar-detail'),
 
     # Group Feature Page
@@ -37,4 +37,13 @@ urlpatterns = [
     path('group/create', views.groupCreate, name='groupcreate'),
     path('group/<int:group_id>', views.groupInfo, name='groupinfo'),
     path('group/<int:group_id>/manage', views.groupManage, name='groupmanage'),  # 이렇게. <-- How?
+
+    path('group/<int:group_id>/article/<int:article_id>/comment/create', views.commentCreate, name='comment-create'),
+    path('group/<int:group_id>/article/<int:article_id>/comment/delete', views.commentDelete, name='comment-delete'),
+
 ]
+
+
+
+
+

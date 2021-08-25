@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-    {% load static %}
     <link rel="stylesheet" href="{% static '/whatshouldido/calendar.css' %}">
         <section class="white">
             <div class="calendar_header">
@@ -22,7 +23,8 @@
                     <div class="day">토</div>
                 </div>
                 <div class="dates"></div>
+                        {{ data }}
             </div>
-        <section>
+        </section>
         <script src="{% static 'js/calender.js' %}"></script>
 {% endblock %}
