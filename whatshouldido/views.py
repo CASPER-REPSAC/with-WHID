@@ -165,6 +165,8 @@ def getUserObject_or_404(user_id: int, group_id: int):
     return user_object
 
 
+#######################
+# Article
 def groupArticleCreate(request, group_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
@@ -183,23 +185,14 @@ def groupArticleCreate(request, group_id):
     return render(request, "group-article-write.html", context)
 
 
-def groupArticleEdit(request, group_id, article_id):
-    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+def groupArticleList(request, group_id):
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
     user_id = getUserObject_or_404(4, group_id)
-    if request.method == "POST":
-        category = int(request.POST['grouparticlecategory'][0])
-        article_form = GroupArticlesForm(request.POST)
-        if article_form.is_valid():
-            article = article_form.save(commit=False)
-            article.grouparticlecategory = category
-            article.uploaddate = timezone.now()
-            article.userid = user_id
-            article.groupid = get_object_or_404(Studygroups, pk=group_id)
-            article.save()
-            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
-    article = get_object_or_404(GroupArticles, pk=article_id)
-    context = {'form': GroupArticlesForm(article)}
-    return render(request, "group-article-write.html", context)
+    article_data = GroupArticles.objects.filter(userid=user_id)
+    article_data = [article_obj
+                    for article_obj in map(model_to_dict,
+                                           [article_obj for article_obj in article_data])]
+    return render(request, 'group-article-list.html', {'article_data': article_data})
 
 
 def groupArticleRead(request, group_id, article_id):
@@ -212,48 +205,101 @@ def groupArticleRead(request, group_id, article_id):
     return render(request, 'group-article-read.html', {'article_data': context})
 
 
-def groupAssignmentCreate(request, group_id):
+def groupArticleEdit(request, group_id, article_id):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = getUserObject_or_404(4, group_id)
+    article = get_object_or_404(GroupArticles, pk=article_id)
     if request.method == "POST":
-        article_form = GroupAssignmentsForm(request.POST)
-
-        if article_form.is_valid():
-            article = article_form.save(commit=False)
-            article.uploaddate = timezone.now()
-            article.userid = user_id
-            article.groupid = get_object_or_404(Studygroups, pk=group_id)
-            article.save()
-            return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
-    context = {'form': GroupAssignmentsForm()}
-    return render(request, "group-article-write.html", context)
-
-
-def groupAssignmentEdit(request, group_id, article_id):
-    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
-    user_id = getUserObject_or_404(4, group_id)
-    article = get_object_or_404(GroupArticles, id=article_id)
-    if request.method == "POST":
+        category = int(request.POST['grouparticlecategory'][0])
         article_form = GroupArticlesForm(request.POST, instance=article)
         if article_form.is_valid():
             article = article_form.save(commit=False)
-            # article.uploaddate = timezone.now() # 수정할 때 게시된 시간은 바뀌면 안되겠지
+            article.grouparticlecategory = category
+            article.uploaddate = timezone.now()
+            article.userid = user_id
+            article.groupid = get_object_or_404(Studygroups, pk=group_id)
             article.save()
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
     context = {'form': GroupArticlesForm(instance=article)}
     return render(request, "group-article-write.html", context)
 
 
-def groupAssignmentRead(request, group_id, article_id):
+def groupArticleDelete(request, group_id, article_id):
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
+    user_id = getUserObject_or_404(4, group_id)
+    # 이 글이 현재 유저의 소유인지 확인
+    article = get_object_or_404(GroupArticles, pk=article_id)
+    if user_id == article.userid:
+        article.delete()
+        return redirect('whatshouldido:group-article-list', group_id=group_id)
+
+    return redirect('whatshouldido:error')
+
+
+#######################
+# Assignment
+def groupAssignmentList(request, group_id):
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
+    getUserObject_or_404(4, group_id)
+    assign_data = GroupAssignments.objects.filter(groupid=group_id)
+    assign_data = [assign_obj
+                   for assign_obj in map(model_to_dict,
+                                         [assign_obj for assign_obj in assign_data])]
+
+    return render(request, 'group-assign-list.html', {'assign_data': assign_data})
+
+
+def groupAssignmentCreate(request, group_id):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = getUserObject_or_404(4, group_id)
+    if request.method == "POST":
+        assign_form = GroupAssignmentsForm(request.POST)
+        if assign_form.is_valid():
+            assign = assign_form.save(commit=False)
+            assign.groupid = get_object_or_404(Studygroups, pk=group_id)
+            assign.save()
+            return redirect('whatshouldido:group-assign-read', group_id=group_id, assign_id=assign.pk)
+    context = {'form': GroupAssignmentsForm()}
+    return render(request, "group-assign-write.html", context)
+
+
+def groupAssignmentEdit(request, group_id, assign_id):
+    # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
+    user_id = getUserObject_or_404(4, group_id)
+    assign = get_object_or_404(GroupAssignments, id=assign_id)
+    if request.method == "POST":
+        assign_form = GroupArticlesForm(request.POST, instance=assign)
+        if assign_form.is_valid():
+            assign = assign_form.save(commit=False)
+            assign.save()
+            return redirect('whatshouldido:group-assign-read',
+                            group_id=group_id, article_id=assign.pk)
+    context = {'form': GroupArticlesForm(instance=assign)}
+    return render(request, "group-assign-write.html", context)
+
+
+def groupAssignmentRead(request, group_id, assign_id):
     getUserObject_or_404(4, group_id)
     # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
-    article_data = get_object_or_404(GroupArticles, id=article_id)
-    context = model_to_dict(article_data)
-    context['groupname'] = article_data.groupid.groupname
-    context['authorname'] = article_data.userid.username
+    assign_data = get_object_or_404(GroupAssignments, id=assign_id)
+    context = model_to_dict(assign_data)
 
-    return render(request, 'group-article-read.html', {'article_data': context})
+    return render(request, 'group-assign-read.html', {'assign_data': context})
 
+
+def groupAssignmentDelete(request, group_id, assign_id):
+    # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
+    user_id = getUserObject_or_404(4, group_id)
+    # 이 그룹이 현재 유저의 소유인지 확인
+    group = get_object_or_404(Studygroups, groupid=group_id)
+    if user_id.pk == group.groupmaster.id:
+        get_object_or_404(GroupAssignments, id=assign_id).delete()
+        return redirect('whatshouldido:group-assign-list', group_id=group_id)
+
+    return redirect('whatshouldido:error'),
+
+
+#######################
 
 def groupSearch(request):
     if request.method == 'GET':

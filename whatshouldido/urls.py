@@ -22,13 +22,17 @@ urlpatterns = [
     path('calendardetail/<str:date_time>', views.calendarDetail, name='calendar-detail'),
 
     # Group Feature Page
+    path('group/<int:group_id>/article', views.groupArticleList, name='group-article-list'),
     path('group/<int:group_id>/article/create', views.groupArticleCreate, name='group-article-create'),
     path('group/<int:group_id>/article/<int:article_id>', views.groupArticleRead, name='group-article-read'),
     path('group/<int:group_id>/article/<int:article_id>/edit', views.groupArticleEdit, name='group-article-edit'),
+    path('group/<int:group_id>/article/<int:article_id>/delete', views.groupArticleDelete, name='group-article-delete'),
 
-    path('group/<int:group_id>/assign/create', views.groupAssignmentCreate, name='group-article-create'),
-    path('group/<int:group_id>/assign/<int:assign_id>', views.groupAssignmentRead, name='group-article-read'),
-    path('group/<int:group_id>/assign/<int:assign_id>/edit', views.groupAssignmentEdit, name='group-article-edit'),
+    path('group/<int:group_id>/assign', views.groupAssignmentList, name='group-assign-list'),
+    path('group/<int:group_id>/assign/create', views.groupAssignmentCreate, name='group-assign-create'),
+    path('group/<int:group_id>/assign/<int:assign_id>', views.groupAssignmentRead, name='group-assign-read'),
+    path('group/<int:group_id>/assign/<int:assign_id>/edit', views.groupAssignmentEdit, name='group-assign-edit'),
+    path('group/<int:group_id>/assign/<int:assign_id>/delete', views.groupAssignmentDelete, name='group-assign-delete'),
 
     path('group/create', views.groupCreate, name='groupcreate'),
     path('group/<int:group_id>', views.groupInfo, name='groupinfo'),
