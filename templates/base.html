@@ -6,36 +6,31 @@
         <meta name="viewport" content="width=device-witdh, initial-scale=1, shrink-to-fit=no">
         <title> 일 벌리고 실천하기 </title>
         <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/style.css' %}">
-        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     </head>
     <body>
         <aside>
           <div class="login">
+            <a href="/" class="logo"><img src="{% static 'images/logo.png' %}"></a>
               {% include "auth.html" %}
-              <hr>
           </div>
-            <form class="assignment-search">
-              <p>과제 목록</p>
-              <input type="text" name="name" placeholder="검색" autocomplete="off">
-              <div style="text-align: center;">calender??</div>
-            </form>
-            <div class="todolist">
-              <a href="/" style="display: block;"><span class="name">과제1</span><span class="count">08.20~08.31</span></a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
-              <a href="/">test</a>
+          <div class="todolist">
+            <a href="/" style="display: block;"><span class="name">홈으로</span></a>
+            <a href="/search" style="display: block;"><span class="name">그룹찾기</span></a>
+            <a href="/">test</a>
+            <a href="/">test</a>
+            <a href="/">test</a>
+            <a href="/">test</a>
+            <a href="/">test</a>
+          </div>
+          <div class="footer">
+              <a href="/">이용약관</a> - <a href="/">개인정보처리방침</a>
+          </div>
+        </aside>
+          <section class="init">
+            <div class="wrap">
+                <h1><strong>미정</strong></h1>
             </div>
-          </aside>
+          </section>
           {% if user.is_authenticated %}
             {% block content %}
             {% endblock %}

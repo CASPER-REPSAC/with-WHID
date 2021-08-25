@@ -125,9 +125,9 @@ def calendar(request):
     # uid = request.META.get('HTTP_USER_ID')
     # user_id = models.SocialaccountSocialaccount.objects.filter(uid=uid)
     if request.method == 'GET':
-        usr_grp_mapping = models.UsersGroupsMapping.objects.filter(useridx=user_id)
+        usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
         for mapping_model in usr_grp_mapping:
-            queryset_list += models.GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
+            queryset_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
 
 def userinfo(request):
     context = {'queryset_list': queryset_list}
@@ -255,6 +255,7 @@ def groupSearch(request):
         group_list = None
     context = {'studygroups': group_list}
     return render(request, "group-search.html", context)
+    
 def groupMake(request):
     # request 에서 pk 4번으로 testMan AuthUser instance 를 가져왔다고 해보자
     user_id = models.AuthUser.objects.get(pk=4)
