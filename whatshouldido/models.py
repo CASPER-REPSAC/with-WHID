@@ -63,7 +63,6 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
-    id = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
@@ -79,8 +78,6 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
-    def __str__(self):
-        return self.username
 
 
 class AuthUserGroups(models.Model):
@@ -160,7 +157,8 @@ class DjangoSite(models.Model):
 
 
 class GroupArticles(models.Model):
-    groupid = models.ForeignKey('Studygroups', models.DO_NOTHING, db_column='groupID')  # Field name made lowercase.
+    id = models.BigAutoField(primary_key=True)
+    groupid = models.ForeignKey('Studygroups', related_name='id', db_column='groupID',on_delete=models.CASCADE)  # Field name made lowercase.
     userid = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='userid')
     grouparticletitle = models.CharField(max_length=64)
     grouparticlecontent = models.CharField(max_length=150)
@@ -203,6 +201,7 @@ class GroupCalendar(models.Model):
 
 
 class GroupArticleComments(models.Model):
+    articleid = models.ForeignKey(GroupArticles, related_name='commentid', db_column='articleid', on_delete=models.CASCADE)
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)
@@ -282,6 +281,7 @@ class Studygroups(models.Model):
 
 
 class UsersGroupsMapping(models.Model):
+    id = models.BigAutoField(primary_key=True)
     useridx = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='useridx')
     groupidx = models.ForeignKey(Studygroups, models.DO_NOTHING, db_column='groupidx')
 

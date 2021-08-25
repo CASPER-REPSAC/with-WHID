@@ -2,7 +2,6 @@ from django import forms
 from django.forms import widgets
 from whatshouldido.models import *
 
-
 class AuthUserForm(forms.ModelForm):
     class Meta:
         model = AuthUser
@@ -86,9 +85,21 @@ class GroupCalendarForm(forms.ModelForm):
         model = GroupCalendar
         fields = ['groupplanname', 'groupplaninfo', 'groupplanlink', 'groupplanstart', 'groupplanend']
         labels = {
-            'groupplanname': '일정 명',
-            'groupplaninfo': '일정 정보',
-            'groupplanlink': '접속 정보',
-            'groupplanstart': '일정 시작 시간',
-            'groupplanend': '일정 종료 시간',
+            'groupplanname' : '일정 명',
+            'groupplaninfo' : '일정 정보',
+            'groupplanlink' : '접속 정보',
+            'groupplanstart' : '일정 시작 시간',
+            'groupplanend' : '일정 종료 시간',
+        }
+
+class GroupArticleCommentsForm(forms.ModelForm):
+    class Meta:
+        model = GroupArticleComments
+        fields = ['articleid','commentid','writer','comment','writedate']
+        labels = {
+            'articleid':'글 번호',
+            'commentid':'댓글 번호',
+            'writer':'작성자',
+            'comment':'댓글',
+            'writedate':'작성일자',
         }

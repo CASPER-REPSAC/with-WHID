@@ -19,16 +19,13 @@ class StudygroupsView(FormView):
     template_name = 'group-search.html'
 
     def form_valid(self, form):
-        print(form)
         searchWord = form.cleaned_data['search_word']
-        print(searchWord)
         group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
 
         context = {}
         context['form'] = form
         context['search_term'] = searchWord
         context['studygroups'] = group_list
-        print(context)
         return render(self.request, self.template_name, context)
 
 
@@ -42,37 +39,33 @@ def groupsearch(request,search_term):
     print(context)
     return render(request,"base.html",context)
 '''
-
-
-def check(request, pk):
-    if request.method == "POST":
-        input_passcode = request.POST.get('passcode')
-        skey = request.session.session_key
-        session = Session.objects.get(session_key=skey)
-        s_data = session.get_decoded()
-        uid = s_data.get('_auth_user_id')
-        if (uid == str(request.user.id)):
-            # try:
-            print(1)
-            group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
+def check(request,pk):
+    if request.method=="POST":
+        uid = request.session['_auth_user_id']
+        #skey=request.session.session_key
+        #sessions=Session.objects.get(session_key=skey)
+        #s_data = sessions.get_decoded()
+        if(uid == str(request.user.id) ):
+            input_passcode = request.POST.get('passcode')
             try:
-                test = group.get(grouppasscode=input_passcode)
+                group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
+                try:
+                    test=group.get(grouppasscode=input_passcode)
+                    print(test.grouppasscode)
+                except:
+                    return HttpResponse("입장 코드가 올바르지 않습니다.")
+                context={'groupss': group }
+                user = AuthUser.objects.get(id=int(uid))
+                groups = Studygroups.objects.get(groupid=pk)
+                mapping = UsersGroupsMapping.objects.get_or_create(useridx=user,groupidx=groups)
+                if(mapping[1]==True):
+                    return render(request, 'join.html', context)
+                else:
+                    return HttpResponse("이미 가입된 그룹입니다.")
             except:
-                return HttpResponse("입장 코드가 올바르지 않습니다.")
-            context = {'groupss': group}
-            user = AuthUser.objects.get(id=int(uid))
-            groups = Studygroups.objects.get(groupid=pk)
-            mapping = UsersGroupsMapping.objects.get_or_create(useridx=user, groupidx=groups)
-            if (mapping[1] == True):
-                return render(request, 'join.html', context)
-            else:
-                return HttpResponse("이미 가입된 그룹입니다.")
-        # except:
-        #    print(4)
-        #    return render(request, 'error.html')
+                return render(request, 'error.html')
         else:
-            print('5')
-            return render(request, 'error.html')
+            return render(request,'error.html')
 
 
 class MappingView(FormView):
@@ -138,6 +131,19 @@ def calendar(request):
         for mapping_model in usr_grp_mapping:
             queryset_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
 
+def userinfo(request):
+    #if request.method=="POST":
+        uid = request.session['_auth_user_id']
+        model = UsersGroupsMapping.objects.filter(useridx=int(uid)).distinct()
+        context = {}
+        context['studygroups'] = model
+        return render(request, "mypage.html", context)
+    #else:
+    #    return HttpResponse("에러가 나부러쓰")
+
+#Main Page Feature
+def main(request):
+    return HttpResponse("main")
 
 def calendarDetail(request, date_time: str):
     # 우선 date_time 값를 url 로 'YYYY-MM-DD' 형식의 데이터를 입력받는다.
@@ -184,7 +190,6 @@ def groupArticleCreate(request, group_id):
     context = {'form': GroupArticlesForm()}
     return render(request, "group-article-write.html", context)
 
-
 def groupArticleList(request, group_id):
     # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
     user_id = getUserObject_or_404(4, group_id)
@@ -203,6 +208,7 @@ def groupArticleRead(request, group_id, article_id):
     context['groupname'] = article_data.groupid.groupname
     context['authorname'] = article_data.userid.username
     return render(request, 'group-article-read.html', {'article_data': context})
+
 
 
 def groupArticleEdit(request, group_id, article_id):
@@ -350,3 +356,30 @@ def groupManage(request, group_id):
             return redirect('whatshouldido:groupinfo', group_id=group.pk)
     form = StudygroupsForm(instance=group)
     return render(request, 'group-manage.html', {'form': form})
+
+def groupInfo(request, group):
+    try:
+        group_data = models.Studygroups.objects.get(groupid=group)
+        context = [group_data.groupname, group_data.groupmaster]
+    except:
+        return redirect('whatshouldido:error')
+
+    return render(request, 'group-info.html', {'group_data': context})
+
+def comments(request, pk, articleid):
+    commentModel = GroupArticleComments
+    uid = request.session['_auth_user_id']
+    article = get_object_or_404(GroupArticles, id=articleid)
+    if request.method == "POST":
+        form = GroupArticleCommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.articleid = article
+            comment.writedate = timezone.now()
+            comment.save()
+            return redirect('whatshouldido:comment', articleid=article.id)
+            #return render()
+    #elif request.method == "GET":
+    #삭제
+    else:
+        return HttpResponse("에러")
