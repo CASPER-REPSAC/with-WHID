@@ -79,6 +79,7 @@ class AuthUser(models.Model):
         db_table = 'auth_user'
 
 
+
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
@@ -168,11 +169,15 @@ class GroupArticles(models.Model):
         managed = False
         db_table = 'group_articles'
 
+    def __str__(self):
+        return self.grouparticletitle
+
 
 class GroupAssignments(models.Model):
     groupid = models.ForeignKey('Studygroups', models.DO_NOTHING, db_column='groupID')  # Field name made lowercase.
     groupassignment = models.CharField(db_column='groupAssignment', max_length=32)  # Field name made lowercase.
-    groupassignmentdetail = models.CharField(db_column='groupAssignmentdetail', max_length=500)  # Field name made lowercase.
+    groupassignmentdetail = models.CharField(db_column='groupAssignmentdetail',
+                                             max_length=500)  # Field name made lowercase.
     groupassignmentlimit = models.DateTimeField(db_column='groupAssignmentlimit')  # Field name made lowercase.
 
     class Meta:
@@ -185,7 +190,8 @@ class GroupCalendar(models.Model):
     groupplanid = models.AutoField(db_column='groupPlanid', primary_key=True)  # Field name made lowercase.
     groupplanname = models.CharField(db_column='groupPlanname', max_length=64)  # Field name made lowercase.
     groupplaninfo = models.CharField(db_column='groupPlaninfo', max_length=128)  # Field name made lowercase.
-    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True,
+                                     null=True)  # Field name made lowercase.
     groupplanstart = models.DateTimeField(db_column='groupPlanstart')  # Field name made lowercase.
     groupplanend = models.DateTimeField(db_column='groupPlanend')  # Field name made lowercase.
 
@@ -204,7 +210,7 @@ class GroupArticleComments(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'grouparticlecomments'
+        db_table = 'grouparticlecomments'  # studygroups가 아니라 별개의 테이블이 있음.
 
 
 class SocialaccountSocialaccount(models.Model):
@@ -269,6 +275,9 @@ class Studygroups(models.Model):
     class Meta:
         managed = False
         db_table = 'studygroups'
+
+    def __str__(self):
+        return self.groupname
 
 
 class UsersGroupsMapping(models.Model):

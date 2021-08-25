@@ -1,5 +1,4 @@
 .calendar {
-  width: 90%;
   margin: auto;
   padding-bottom: 50px;
 }
@@ -40,26 +39,28 @@
 }
 
 .days {
+  justify-content: center;
   display: flex;
   margin: 25px 0 10px;
 }
 
 .day {
-  width: calc(100% / 7);
+  width: calc(100% / 8);
   text-align: center;
   transition: all .3s;
 }
 
 .dates {
-  display: flex;
+  display: inline-flex;
   flex-flow: row wrap;
-  border: 1px solid #333333;
+  text-align: center;
+  justify-content: center;
 }
 
 .date {
   cursor: pointer;
-  width: calc(100% / 7.1);
-  height: 200px;
+  width: calc(100% / 8);
+  height: 150px;
   text-align: left;
   border: 1px solid #333333;
   transition: all .3s;

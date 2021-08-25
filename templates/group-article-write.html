@@ -1,13 +1,14 @@
-{% extends 'base.html' %}
+
 
 {% block contents %}
             <section class="service white">
                 <div class="wrap">
-                    <h1>Write Article</h1>
+                    <h1>Article Write</h1>
                         <form method="POST" class="post-form">{% csrf_token %}
-                            <p><label for="id_groupassignmentdetail">과제 정보:</label> {{ form.groupassignment }}</p>
-                            <p><label for="id_groupassignmentdetail">과제 정보:</label>{{ form.groupassignmentdetail }}</p>
-                            <p><label for="id_groupassignmentlimit">과제 기한:</label>{{ form.groupassignmentlimit | date:'Y-m-d'}}</p>
+{#                            <p><label for="id_groupassignmentdetail">과제 정보:</label> {{ form.groupassignment }}</p>#}
+{#                            <p><label for="id_groupassignmentdetail">과제 정보:</label>{{ form.groupassignmentdetail }}</p>#}
+{#                            <p><label for="id_groupassignmentlimit">과제 기한:</label>{{ form.groupassignmentlimit }}</p>#}
+                                {{ form.as_p }}
                             <button type="submit" class="save btn btn-default">[Save]</button>
                         </form>
                 </div>

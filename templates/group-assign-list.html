@@ -1,0 +1,14 @@
+
+{% block contents %}
+    <section class="service white">
+        <div class="wrap">
+            <h1>Assignment List</h1>
+            {% for assign_obj in assign_data %}
+                    {% for key, value in assign_obj.items %}
+                        <p>assign_data.{{ key }} : {{ value }}</p>
+                    {% endfor %}
+                <br>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %} 

@@ -1,516 +1,152 @@
 @charset "utf-8";
 
-* {
+*{
 	margin: 0; padding: 0; border: 0; font-weight: normal;
 }
-body {
+body{
 	letter-spacing: -0.5px; background-color: #f5f5f5;
 }
 a {
-	text-decoration: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	text-decoration: none; -webkit-tap-highlight-color: #000000;
 }
 hr {
-	clear: both; height: 0; border: 0;
-}
-img {
-	vertical-align: middle;
-}
-ul {
-	list-style-type: none;
+	clear: both; height: 0; border :0;
 }
 aside, section {
 	display: block;
 }
-
 aside {
-	position: fixed; z-index: 9; left: 0; top: 0; height: 100%; overflow-y: auto; -ms-overflow-style: none; border-left: 1px solid #d6d6d6; font-family: "맑은 고딕", "돋움", "Apple SD Gothic Neo", sans-serif; background-color: #fff;
+	position: fixed; z-index: 9;
+	left: 0; top: 0; width: 350px; height: 100%;
+	overflow-y: auto; -ms-overflow-style: none;
+	border-right: 1px solid #d6d6d6;
+	font-family: "맑은 고딕", "돋움", "Apple SD Gothic Neo", sans-serif;
+	background-color: #ffffff;
 }
 aside::-webkit-scrollbar {
 	display: none;
 }
 aside > div.login {
-	position: fixed; z-index: 11; top: 0; box-sizing: border-box; border-bottom: 1px solid #d6d6d6; background-color: #fff;
+	position: fixed; z-index: 11;
+	padding: 20px 15px; width:350px; height: 270px;
+	top: 0;
+	box-sizing: border-box;
+	border-bottom: 1px solid #d6d6d6;
+	background-color: #ffffff;
 }
 aside > div.login > a.logo {
 	display: block; text-align: center;
+	margin-bottom: 40px;
 }
-
+aside > div.login > a.logo > img {
+	width: 50px; height: 50px;
+}
 aside > div.login > a.button {
-	display: block; margin-bottom: 5px; height: 40px; line-height: 40px; box-sizing: border-box;
+	display: block;
+	margin-bottom: 5px;
+	height: 40px; line-height: 40px;
+	box-sizing: border-box;
 	font-size: 14px; font-weight: bold; text-align: center;
 }
 aside > div.login > a.button.login {
-	border: 1px solid #e3e3e3; color: #737373;
-}
-aside > div.login > a.button.register {
-	color: #fff; background-color: #7a6563;
-}
-aside > div.login > p {
-	padding: 5px 5px 0 10px; width: 50%; box-sizing: border-box;
-}
-aside > div.login > p.find {
-	float: right; text-align: right;
-}
-aside > div.login > p.find > a {
-	height: 15px; line-height: 15px; color: #444444; font-size: 12px; cursor: pointer;
-}
-aside > form.search {
-	position: fixed; z-index: 11; padding: 5px; box-sizing: border-box; border-bottom: 1px solid #e3e3e3; background-color: #fff;
+	border: 1px solid #e3e3e3;
+	color: #fff;
+	background-color: #7a6563;
 }
 aside > form.search > p {
 	padding: 10px; line-height: 20px;
 	color: #292929; font-size: 14px; font-weight: bold;
 }
 aside > form.search > input {
-	padding: 0 35px 0 10px; width: 100%; height: 40px; line-height: 20px; box-sizing: border-box; border: 1px solid #e3e3e3;
-	color: #444444; font-size: 14px; background: #f2f2f2 url('/images/about/search.png') no-repeat right 10px center; background-size: 15px 15px;
+	padding: 0 35px 0 10px;
+	width: 100%; height: 40px; line-height: 40px;
+	box-sizing: border-box; border: 1px solid #e3e3e3;
+	background: #f2f2f2;
+	backgrond-size: 15px 15px;
 }
 aside > form.search > input:focus {
 	outline: none;
 }
-aside > form.search > input::-ms-clear {
-	display: none;
-}
-aside > div.campuslist {
+aside > div.todolist {
 	position: relative; z-index: 10;
+	top: 270px;
 }
-aside > div.campuslist > a {
-	display: block; padding: 0 15px; width: 100%; height: 50px; line-height: 50px; box-sizing: border-box; border-bottom: 1px solid #e3e3e3;
+aside > div.todolist > a {
+	display: bock; padding: 0 15px;
+	width: 100%; height: 50px; line-height: 50px;
+	box-sizing: border-box; border-bottom: 1px solid #e3e3e3;
 }
-aside > div.campuslist > a:hover {
+aside > div.todolist > a:hover {
 	background-color: #f5f5f5;
 }
-aside > div.campuslist > a > span.name {
+aside > div.todolist > a > span.name {
 	color: #444444; font-size: 14px;
 }
-aside > div.campuslist > a > span.count {
-	float: right; color: #a6a6a6; font-size: 12px;
+aside > div.footer {
+	position: absolute; z-index: 10;
+	width: 100%; bottom: 0;
+	padding: 16px 0;
+	font-size: 14px;
+	text-align: center;
+}
+aside > div.footer > a {
+	display: inline-block; line-height: 20px;
+	color: #737373;
 }
 
 section {
-	width: 100%; box-sizing: border-box; word-break: break-all; font-family: NanumSquare; text-align: center;
+	width: 100%;
+	box-sizing: border-box;
+	word-break: break-all;
+	text-align: center;
 }
 section.white {
-	background-color: #fff;
+	position: relative;
+	text-align: center;
+	width: calc(100% - 350px);
+	background-color: #ffffff;
+	left: 350px;
+}
+section > form.search {
+	position: fixed; z-index: 11;
+	text-align: center;
+	padding: 5px;
+	top: 0; width: 100%;
+	box-sizing: border-box; border: 1px solid #d6d6d6;
+	background-color: #ffffff;
+}
+section > form.search > input {
+	padding: 0 35px 0 10px; width: calc(100% - 350px); height: 40px; line-height: 20px; 
+	box-sizing: border-box; border: 1px solid #e3e3e3;
+	color: #444444; font-size: 14px; 
+	background: #f2f2f2; 
+	background-size: 15px 15px;
 }
 section.init > div.wrap {
 	position: relative; margin: 0 auto;
+	width: 774px; height: 270px;
 }
-section.init > div.wrap > div.device {
-	box-sizing: border-box;
-}
-section.init > div.wrap > div.device > div.screen {
-	position: relative; z-index: 1; border: 2px solid #d6d6d6; border-bottom: 0; border-radius: 18px 18px 0 0; background-color: #fff; overflow: hidden;
-}
-section.init > div.wrap > div.device > div.screen > div.image {
-	position: absolute; background: transparent url('/images/about/screen.png') no-repeat;
-}
-section.init > div.wrap > div.stores {
-	font-size: 0;
-}
-section.init > div.wrap > div.stores > a {
-	display: inline-block; border: 1px solid #d6d6d6; border-radius: 6px;
-}
-section.init > div.wrap > div.stores > a:first-child {
-	margin-right: 5px;
-}
-section.footer > ul.links {
-	padding: 16px 0; font-size: 0;
-}
-section.footer > ul.links > li {
-	display: inline-block;
-}
-section.footer > ul.links > li > a {
-	display: inline-block; line-height: 20px; color: #737373;
-}
-section.footer > ul.links > li.copyright > a,
-section.footer > ul.links > li.privacy > a {
-	font-family: NanumSquareEB;
+section.init > div.wrap > h1 {
+	top: 50%; right: 50%; width: 50%;
 }
 section h1,
 section h2 {
 	color: #292929;
-}
-section h1 > strong,
-section h2 > strong {
-	color: #c62917; font-family: NanumSquareEB;
-}
-section div.paragraph > p {
-	color: #444444;
-}
-section div.paragraph > p > strong {
-	font-family: NanumSquareEB;
-}
-section div.figures {
-	font-size: 0;
-}
-section div.figures > div {
-	display: inline-block;
-}
-section div.figures > div > p.number {
-	color: #292929; font-family: NanumSquareEB;
-}
-section div.figures > div > p.number > strong {
-	display: inline-block; margin-right: 8px; letter-spacing: -2px;
-}
-section div.figures > div > p.number > strong:first-child {
-	margin-right: 0;
-}
-section div.figures > div > p.number > span {
-	display: inline-block; margin-right: 4px;
-}
-section div.figures > div > p.description {
-	color: #444444;
-}
-section div.figures > div > p.icon {
-	margin: 0 auto; border-radius: 50px; background-color: #fff;
+	line-height: 35px; font-size: 28px;
 }
 
-section.init > div.wrap > div.device > div.screen > div.home {
-	opacity: 1;
+section h2 {
+	padding: 120px 0 40px 0;
 }
-section.init > div.wrap > div.device > div.screen > div.timetable {
-	opacity: 0; animation: active-init-timetable 6s infinite;
+section > div.grouplist > a {
+	display: block; padding: 0 15px;
+	top: 0; width: 100%; height: 50px; line-height: 50px;
+	box-sizing: border-box; border-bottom: 1px solid #e3e3e3;
 }
-section.init > div.wrap > div.device > div.screen > div.board {
-	opacity: 0; animation: active-init-board 6s infinite;
-}
-@keyframes active-init-timetable {
-	0% { opacity: 0; }
-	26% { opacity: 0; }
-	34% { opacity: 1; }
-	67% { opacity: 1; }
-	68% { opacity: 0; }
-	100% { opacity: 0; }
-}
-@keyframes active-init-board {
-	0% { opacity: 0; }
-	59% { opacity: 0; }
-	67% { opacity: 1; }
-	92% { opacity: 1; }
-	100% { opacity: 0; }
+section > div.grouplist > a:hover {
+	background-color: #f5f5f5;
 }
 
-section.community > div.figures.active > div > p.icon > img {
-	-webkit-animation: active-community 1s ease-out; animation: active-community 1s ease-out;
-}
-section.community > div.figures.active > div:nth-of-type(1) > p.icon > img {
-	-webkit-animation-duration: 0.6s; animation-duration: 0.6s;
-}
-section.community > div.figures.active > div:nth-of-type(2) > p.icon > img {
-	-webkit-animation-duration: 0.8s; animation-duration: 0.8s;
-}
-section.community > div.figures.active > div:nth-of-type(3) > p.icon > img {
-	-webkit-animation-duration: 1s; animation-duration: 1s;
-}
-@-webkit-keyframes active-community {
-	0% { opacity: 0; -webkit-transform: translateY(20px); }
-	50% { opacity: 0; -webkit-transform: translateY(20px); }
-	100% { opacity: 1; -webkit-transform: translateY(0px); }
-}
-@keyframes active-community {
-	0% { opacity: 0; transform: translateY(20px); }
-	50% { opacity: 0; transform: translateY(20px); }
-	100% { opacity: 1; transform: translateY(0px); }
-}
-
-@media only screen and (min-width: 1281px) {
-	section.init > div.wrap {
-		width: 774px; height: 270px;
-	}
-	section.init > div.wrap > div.device {
-		top: 120px; right: 0;
-	}
-	section.init > div.wrap > h1 {
-		top: 50%; right: 50%; width: 50%;
-	}
-	section.init > div.wrap > div.stores {
-		text-align: center;
-	}
-	section h1,
-	section h2 {
-		line-height: 35px; font-size: 28px;
-	}
-	section h2 {
-		padding: 120px 0 40px 0;
-	}
-	section div.paragraph {
-		padding-bottom: 80px;
-	}
-	section div.paragraph > p {
-		line-height: 28px; font-size: 18px;
-	}
-	section div.figures {
-		padding-bottom: 120px;
-	}
-	section div.figures > div {
-		margin: 0 48px;
-	}
-	section div.figures > div > p.number > strong {
-		font-size: 38px;
-	}
-	section div.figures > div > p.number > span {
-		font-size: 18px;
-	}
-	section div.figures > div > p.description {
-		margin-top: 10px; font-size: 16px;
-	}
-	section div.figures > hr {
-		margin: 0 -24px 25px -24px; height: 20px;
-	}
-	section div.figures > div > p.icon {
-		width: 100px; height: 100px; line-height: 100px;
-	}
-	section div.figures > div > p.icon > img {
-		height: 48px;
-	}
-}
-
-@media only screen and (min-width: 991px) and (max-width: 1280px) {
-	section.init > div.wrap {
-		width: 70%; height: 270px;
-	}
-	section.init > div.wrap > h1 {
-		top: 50%; right: 50%; width: 50%;
-	}
-	section.init > div.wrap > div.stores {
-		text-align: center;
-	}
-	section.init > div.wrap > div.device {
-		top: 80px; right: 0;
-	}
-	section h1,
-	section h2 {
-		line-height: 30px; font-size: 24px;
-	}
-	section h2 {
-		padding: 80px 0 30px 0;
-	}
-	section div.paragraph {
-		padding-bottom: 60px;
-	}
-	section div.paragraph > p {
-		line-height: 25px; font-size: 16px;
-	}
-	section div.figures {
-		padding-bottom: 80px;
-	}
-	section div.figures > div {
-		margin: 0 36px;
-	}
-	section div.figures > div > p.number > strong {
-		font-size: 32px;
-	}
-	section div.figures > div > p.number > span {
-		font-size: 16px;
-	}
-	section div.figures > div > p.description {
-		margin-top: 10px; font-size: 14px;
-	}
-	section div.figures > hr {
-		margin: 0 -12px 20px -12px; height: 20px;
-	}
-	section div.figures > div > p.icon {
-		width: 80px; height: 80px; line-height: 80px;
-	}
-	section div.figures > div > p.icon > img {
-		height: 32px;
-	}
-}
-
-@media only screen and (min-width: 991px) {
-	div.mobile {
-		display: none;
-	}
-	aside {
-		width: 350px;
-	}
-	aside > div.login {
-
-		padding: 20px 15px; width: 350px; height: 270px;
-
-	}
-	aside > div.login > a.logo {
-		margin-bottom: 40px;
-	}
-	aside > div.login > a.logo > img {
-		height: 30px;
-	}
-	aside > form.search {
-		top: 270px; width: 350px;
-		text-align: center;
-	}
-	aside > div.campuslist {
-		top: 361px;
-	}
-	section {
-		padding-left: 351px;
-	}
-	section.init > div.wrap > h1 {
-		position: absolute; text-align: right;
-	}
-	section.init > div.wrap > div.stores {
-		position: absolute;
-	}
-	section.init > div.wrap > div.stores > a {
-		padding: 0 15px; height: 58px; line-height: 58px;
-	}
-	section.init > div.wrap > div.stores > a > img {
-		height: 30px;
-	}
-	section.init > div.wrap > div.device {
-		position: absolute;
-	}
-	section.init > div.wrap > div.device > div.screen {
-		width: 270px; height: 540px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.image {
-		background-size: 840px auto;
-	}
-	section.init > div.wrap > div.device > div.screen > div.home {
-		top: 0; width: 270px; height: 540px; background-position: 0px 0px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.timetable {
-		top: 0; width: 270px; height: 540px; background-position: -285px 0px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.board {
-		top: 0; width: 270px; height: 540px; background-position: -570px 0px;
-	}
-	section.footer > ul.links > li > a {
-		margin: 0 8px; font-size: 13px;
-	}
-	section div.figures > hr {
-		display: inline-block; border-right: 2px solid #d6d6d6;
-	}
-}
-
-@media only screen and (max-width: 990px) {
-	div.mobile {
-		padding: 10px; border-bottom: 1px solid #e3e3e3; background-color: #fff;
-	}
-	div.mobile > img.logo {
-		float: right; margin: 4px; height: 20px;
-	}
-	div.mobile > a {
-		float: right; padding: 0 8px; line-height: 28px; border-radius: 3px; color: #fff; font-size: 12px; background-color: #c62917;
-	}
-	aside {
-		display: none;
-	}
-	aside.visible {
-		display: block;
-	}
-	aside,
-	aside > div.login {
-		width: 100%;
-	}
-	aside > div.login {
-		padding: 30px 15px; height: 255px;
-	}
-	aside > div.login > a.logo {
-		margin-bottom: 15px;
-	}
-	aside > div.login > a.logo > img {
-		height: 60px;
-	}
-	aside > form.search {
-		display: none;
-	}
-	aside > div.campuslist {
-		top: 255px;
-	}
-	section.init > div.wrap > h1 {
-		padding: 50px 0 20px 0;
-	}
-	section.init > div.wrap > div.stores {
-		padding-bottom: 20px;
-	}
-	section.init > div.wrap > div.stores > a {
-		padding: 0 15px; height: 38px; line-height: 38px;
-	}
-	section.init > div.wrap > div.stores > a > img {
-		height: 20px;
-	}
-	section.init > div.wrap > div.device {
-		margin: 0 auto; width: 184px; height: 362px;
-	}
-	section.init > div.wrap > div.device > div.screen {
-		width: 180px; height: 360px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.image {
-		background-size: 560px auto;
-	}
-	section.init > div.wrap > div.device > div.screen > div.home {
-		top: 0; width: 180px; height: 360px; background-position: 0px 0px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.timetable {
-		top: 0; width: 180px; height: 360px; background-position: -190px 0px;
-	}
-	section.init > div.wrap > div.device > div.screen > div.board {
-		top: 0; width: 180px; height: 360px; background-position: -380px 0px;
-	}
-	section.footer > ul.links > li > a {
-		margin: 0 4px; font-size: 11px;
-	}
-	section h1,
-	section h2 {
-		line-height: 25px; font-size: 18px;
-	}
-	section h2 {
-		padding: 50px 0 20px 0;
-	}
-	section div.paragraph {
-		padding-bottom: 50px;
-	}
-	section div.paragraph > p {
-		line-height: 18px; font-size: 12px;
-	}
-	section div.figures {
-		padding-bottom: 50px;
-	}
-	section div.figures > div {
-		margin: 0 10px;
-	}
-	section div.figures > div > p.number {
-		float: right; width: 140px; text-align: right;
-	}
-	section div.figures > div > p.number > strong {
-		line-height: 36px; font-size: 28px;
-	}
-	section div.figures > div > p.number > span {
-		margin-top: 10px; line-height: 20px; font-size: 11px; vertical-align: top;
-	}
-	section.service div.figures > div > p.description {
-		float: right; margin-top: 10px; width: 80px; line-height: 20px; font-size: 11px; text-align: right;
-	}
-	section.community div.figures > div > p.description {
-		margin-top: 10px; font-size: 11px;
-	}
-	section div.figures > hr {
-		display: block; margin: 0 auto 10px 0;
-	}
-	section div.figures > div > p.icon {
-		width: 60px; height: 60px; line-height: 60px;
-	}
-	section div.figures > div > p.icon > img {
-		height: 24px;
-	}
-}
-
-/* contents css */
-.nav-link{
-    color: var(--fontColor);
-    text-align: center;
-    font-weight: bold;
-}
-.recent-comment-box{
-    position: relative;
-    border: 1px solid var(--borderColor);
-    border-radius : 10px;
-    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
-
-    padding: 20px;
-    margin: 20px 0px;
-
-    width: 100%;
+section > div.grouplist > a > span {
+	color: #444444; font-size: 14px;
 }
