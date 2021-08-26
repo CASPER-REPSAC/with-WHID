@@ -46,6 +46,8 @@ const renderCalender = () => {
                 <div class="date_event">
                     <div class="event-itm">
                         ${assignments}
+                        <br>
+                        ${calendar}
                     </div>
                 </div>
 

@@ -20,13 +20,19 @@ def check_auth_user_id_exist(request):
 
 
 def getUserContents(user_id):
-    assign_list, article_list, registered_groups = [], [], list(UsersGroupsMapping.objects.filter(useridx=user_id))
+    assign_list, article_list, calendar_list, registered_groups = [], [], [],list(UsersGroupsMapping.objects.filter(useridx=user_id))
     for mapping_model in registered_groups:
         assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
         article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
-    return {"data": {'assign': [x for x in map(model_to_dict, assign_list)],
-                     'article': [x for x in map(model_to_dict, article_list)],
-                     'groups': [x.groupidx for x in registered_groups]}}
+        calendar_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
+    return {
+            "data": {
+                    'assign': [x for x in map(model_to_dict, assign_list)],
+                    'article': [x for x in map(model_to_dict, article_list)],
+                    'calendars' :[x for x in map(model_to_dict, calendar_list)],
+                    'groups': [x.groupidx for x in registered_groups]
+                    }
+            }
 
 
 class StudygroupsView(FormView):
@@ -133,15 +139,15 @@ def join(request, pk):
 
 # Default Page
 def index(request):
-    try:
+    #try:
         page = request.GET.get('page', 1)
         if check_auth_user_id_exist(request):
             if request.method == 'GET':
                 user_id = int(request.session['_auth_user_id'])
                 return render(request, 'calendar.html', context=getUserContents(user_id))
         return render(request, 'calendar.html')
-    except:
-        return redirect('whatshouldido:error')
+    #except:
+    #    return redirect('whatshouldido:error')
 
 def error(request):
     return render(request, "error.html")
