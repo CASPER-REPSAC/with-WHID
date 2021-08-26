@@ -3,7 +3,7 @@
 {% block content %}
     <div class="wrap">
         <h1>Article Write</h1>
-            <form method="POST" class="post-form">{% csrf_token %}
+            <form method="POST" class="post-form" enctype="multipart/form-data" >{% csrf_token %}
                     <p><label for="id_grouparticletitle">게시글 제목:</label>
                         <input type="text" name="grouparticletitle" maxlength="64" required="" id="id_grouparticletitle"
                         value="{{ article.grouparticletitle }}"></p>
@@ -24,7 +24,43 @@
                                 {% if article.grouparticlecategory == 3%}
                                         selected{% endif %}>카테고리 2</option>
                     </select></p>
-                <button type="submit" class="save btn btn-default">[Save]</button>
-            </form>
+    <br>
+        ################## File Upload ##################
+
+        <br>
+        ~ ! @ # $ % ^ & * = [ ] { } " ' ` 등의 문자가 들어간 파일은 업로드 불가 <br>
+        .zip 파일만 업로드 가능 <br>
+        <input type="file" name="uploadedFile">
+                <br>
+                <br>
+    <h1><button type="submit" class="save btn btn-default">[Save]</button></h1>
+    </form>
+    <style>
+        table {
+            width: 50%;
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background-color: #FFFFFF;
+        }
+
+        table tr td {
+            padding-top: 15px;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Upload Date & Time</th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.id }}</td>
+                <td>{{ file.field_native_filename }}</td>
+                <td>{{ file.uploaded_date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
     </div>
 {% endblock %}
