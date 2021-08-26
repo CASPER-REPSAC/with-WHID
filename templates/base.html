@@ -20,20 +20,36 @@
             <a href="/">test</a>
             <a href="/">test</a>
             <a href="/">test</a>
-            <a href="/">test</a>
           </div>
           <div class="footer">
               <a href="/">이용약관</a> - <a href="/">개인정보처리방침</a>
           </div>
         </aside>
           <section class="init">
-            <div class="wrap">
-                <h1><strong>미정</strong></h1>
-            </div>
+            {% if user.is_authenticated %}
+              <div class="notice">
+                <div class="title">공지사항</div>
+                <ul>
+                  {% for article in data.article %}
+                    <li><a href="/group/{{ article.groupid }}/article/{{ article.id }}">{{article.grouparticletitle}}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div class="notice">
+                <div class="title">과제</div>
+                <ul>
+                  {% for assign in data.assign %}
+                    <li><a href="/group/{{ assign.groupid }}/assign/{{ assign.id }}">{{assign.groupassignment}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
           </section>
+          <section class="white">
           {% if user.is_authenticated %}
             {% block content %}
             {% endblock %}
           {% endif %}
+          </section>
     </body>
 </html>

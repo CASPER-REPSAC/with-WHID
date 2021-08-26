@@ -13,6 +13,10 @@ from .forms import *
 from .models import *
 from django.http import QueryDict
 
+def check_auth_user_id_exist(request):
+    if '_auth_user_id' in dict(request.session):
+        return True
+    return False
 
 class StudygroupsView(FormView):
     form_class = GroupSearchForm
@@ -44,7 +48,7 @@ def groupsearch(request,search_term):
 def check(request, pk):
     if request.method == "POST":
         uid = int(request.session['_auth_user_id'])
-        if uid != str(request.user.id):
+        if uid != request.user.id:
             return render(request, 'error.html')
         # skey=request.session.session_key
         # sessions=Session.objects.get(session_key=skey)
@@ -95,16 +99,25 @@ def join(request, pk):
 
 # Default Page
 def index(request):
-    page = request.GET.get('page', 1)
-    if '_auth_user_id' in dict(request.session):
-        queryset_list = []
-        if request.method == 'GET':
-            user_id = int(request.session['_auth_user_id'])
-            usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
-            for mapping_model in usr_grp_mapping:
-                queryset_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx)
-            return render(request, 'calendar.html', {"data": [x for x in map(model_to_dict, queryset_list)]})
-    return render(request, 'calendar.html')
+    try:
+        page = request.GET.get('page', 1)
+        if check_auth_user_id_exist(request):
+            assign_list = []
+            article_list = []
+            if request.method == 'GET':
+                user_id = int(request.session['_auth_user_id'])
+                usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
+                for mapping_model in usr_grp_mapping:
+                    assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
+                for mapping_model in usr_grp_mapping:
+                    article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
+
+                context = {"data": {'assign': [x for x in map(model_to_dict, assign_list)],
+                                    'article': [x for x in map(model_to_dict, article_list)]}}
+                return render(request, 'calendar.html', context)
+        return render(request, 'calendar.html')
+    except:
+        return redirect('whatshouldido:error')
 
 
 def error(request):

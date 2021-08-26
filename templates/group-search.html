@@ -1,20 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
     {% if user.is_authenticated %}
-    <section class="white">
-        <form action="/search" method="post" class="search"> 
-            {% csrf_token %}
-            {{ form.as_table }}
-        </form>
-        <div class="grouplist">
-            {% if studygroups %}
-                {% for group in studygroups %}
-                    <a href="{% url 'whatshouldido:join' pk=group.groupid %}" method="get" value="{{ group.groupid }}">
-                        <span>{{ group.groupname }}</span>
-                    </a>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </section>
+    <form action="/search" method="post" class="search"> 
+        {% csrf_token %}
+        {{ form.as_table }}
+    </form>
+    <div class="grouplist">
+        {% if studygroups %}
+            {% for group in studygroups %}
+                <a href="{% url 'whatshouldido:join' pk=group.groupid %}" method="get" value="{{ group.groupid }}">
+                    <span>{{ group.groupname }}</span>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
     {% endif %}
 {% endblock %}

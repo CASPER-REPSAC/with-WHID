@@ -19,7 +19,7 @@ aside {
 	position: fixed; z-index: 9;
 	left: 0; top: 0; width: 350px; height: 100%;
 	overflow-y: auto; -ms-overflow-style: none;
-	border-right: 1px solid #d6d6d6;
+	border-right: 1px solid #25282b;
 	font-family: "맑은 고딕", "돋움", "Apple SD Gothic Neo", sans-serif;
 	background-color: #ffffff;
 }
@@ -31,7 +31,7 @@ aside > div.login {
 	padding: 20px 15px; width:350px; height: 270px;
 	top: 0;
 	box-sizing: border-box;
-	border-bottom: 1px solid #d6d6d6;
+	border-bottom: 1px solid #25282b;
 	background-color: #ffffff;
 }
 aside > div.login > a.logo {
@@ -109,7 +109,7 @@ section.white {
 	left: 350px;
 }
 section > form.search {
-	position: fixed; z-index: 11;
+	position: relative; z-index: 11;
 	text-align: center;
 	padding: 5px;
 	top: 0; width: 100%;
@@ -123,12 +123,56 @@ section > form.search > input {
 	background: #f2f2f2; 
 	background-size: 15px 15px;
 }
-section.init > div.wrap {
-	position: relative; margin: 0 auto;
-	width: 774px; height: 270px;
+section.init {
+	position: relative;
+	width: calc(100% - 350px);
+	left: 350px;
+	overflow: hidden;
+	text-align: left;
+	background-color: #ffffff;
+	border-bottom: 1px solid #444444;
 }
-section.init > div.wrap > h1 {
-	top: 50%; right: 50%; width: 50%;
+section.init > div.notice {
+	margin-left: 15px;
+	width: calc(50% - 30px);
+	height: 270px;
+	float: left;
+	vertical-align: middle;
+	left: 0;
+}
+section.init > div.notice > div.title{
+	display: inline-block;
+    position: relative;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #25282b !important;
+    color: #25282b;
+    font-weight: 500;
+	font-size: 25px;
+    line-height: 1;
+	font-family: '나눔고딕', Arial, Helvetica, sans-serif;
+}
+section.init > div.notice > ul {
+	list-style-type: none;
+    padding: 0;
+	margin: 0;
+	display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+} 
+section.init > div.notice > ul > li{
+	border-bottom-width: 1px;
+    border-bottom-style: dashed;
+    border-bottom-color: #f1f1f1;
+	box-sizing: inherit;
+	display: list-item;
+    text-align: -webkit-match-parent;
+}
+section.init > div.notice > ul > li > a{
+	color: #25282b;
 }
 section h1,
 section h2 {

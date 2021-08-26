@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <section class="service white">
-        <div class="wrap">
-            <h1>Article List</h1>
-            {% for article_obj in article_data %}
-                    {% for key, value in article_obj.items %}
-                        <p>article_data.{{ key }} : {{ value }}</p>
-                    {% endfor %}
-                <br>
-            {% endfor %}
-        </div>
-    </section>
+    <div class="wrap">
+        <h1>Article List</h1>
+        {% for article_obj in article_data %}
+                {% for key, value in article_obj.items %}
+                    <p>article_data.{{ key }} : {{ value }}</p>
+                {% endfor %}
+            <br>
+        {% endfor %}
+    </div>
 {% endblock %} 
