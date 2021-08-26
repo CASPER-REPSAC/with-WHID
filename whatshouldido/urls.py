@@ -40,7 +40,7 @@ urlpatterns = [
     path('group/<int:group_id>/article/<int:article_id>/comment/create', views.commentCreate, name='comment-create'),
     path('group/<int:group_id>/article/<int:article_id>/comment/delete', views.commentDelete, name='comment-delete'),
 
-    path('group/<int:group_id>/article/<int:article_id>/<int:file_id>', views.FileDownloadView.as_view(), name="download")
+    path('group/<int:group_id>/article/<int:article_id>/<int:file_id>', views.download_line, name="download")
 ]
 
 

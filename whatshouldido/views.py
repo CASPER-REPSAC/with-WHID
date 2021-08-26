@@ -607,7 +607,6 @@ def groupCreate(request):
                         useridx=group.groupmaster,
                         groupidx=group)
                     group_mapping.save()
-                    print(group.grouppasscode)
                     return redirect('whatshouldido:groupinfo', group_id=group.pk)
             form = StudygroupsForm()
             context = {'form': form}
@@ -632,6 +631,7 @@ def groupInfo(request, group_id):
     return render(request, 'group-info.html', {'group_data': context})
 
 
+###이거 그룹장인지 검사하던가?
 def groupManage(request, group_id):
     try:
         if check_auth_user_id_exist(request):
@@ -664,26 +664,17 @@ def changeFileName(file):
 ###############################
 # 수정중#### DON"T TOUCH#######
 
-class FileDownloadView(SingleObjectMixin, View):
-    queryset = ArticleFiles.objects.all()
-
-    def get(self, request, file_id):
-        object = self.get_object(file_id)
-
-        file_path = object.attached.path
-        log.info(str(file_path))
-        file_type = object.content_type  # django file object에 content type 속성이 없어서 따로 저장한 필드
-        log.info(str(file_type))
-        fs = FileSystemStorage(file_path)
-        response = FileResponse(fs.open(file_path, 'rb'), content_type=file_type)
-        response['Content-Disposition'] = f'attachment; filename={object.get_filename()}'
-
-        return response
+from config.settings import MEDIA_ROOT
 
 
 def download_line(request, group_id, article_id, file_id):
-    file = ArticleFiles.objects.get(pk=file_id)
-    fs = FileSystemStorage(str(file.uploaded_file.path))
-    FileResponse(fs.open('filename.pdf', 'rb'), content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename="filename.pdf"'
-    return response
+    if check_auth_user_id_exist(request):
+        user_id = get_object_or_404(AuthUser, pk=int(request.session['_auth_user_id']))
+        mapping = get_object_or_404(UsersGroupsMapping, useridx=user_id, groupidx=group_id)
+        file = ArticleFiles.objects.get(pk=file_id)
+        fs = FileSystemStorage(MEDIA_ROOT)
+        response = FileResponse(fs.open(file.field_encr_filename, 'rb'), content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename="{file.field_native_filename}"'
+        return response
+    else:
+        return redirect('whatshouldido:index')
