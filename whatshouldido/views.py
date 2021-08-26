@@ -23,7 +23,7 @@ def getUserContents(user_id):
     assign_list, article_list, calendar_list, registered_groups = [], [], [],list(UsersGroupsMapping.objects.filter(useridx=user_id))
     for mapping_model in registered_groups:
         assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
-        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
+        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx,grouparticlecategory=1).order_by('-uploaddate')
         calendar_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
     return {
             "data": {
@@ -53,7 +53,7 @@ class StudygroupsView(FormView):
                     **response_kwargs
                 )
         except:
-            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ self.request.user.id )
+            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ str(self.request.user.id) )
             return redirect('whatshouldido:error')
 
     def form_valid(self, form):
@@ -68,10 +68,10 @@ class StudygroupsView(FormView):
                 log.info("Search : enter StudygroupsView | User :"+ str(self.request.user.id)+ "Search Word : " + searchWord)
                 return render(self.request, self.template_name, context)
             else:
-                log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ self.request.user.id )
+                log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ str(self.request.user.id) )
                 return redirect('whatshouldido:error')
         except:
-            log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ self.request.user.id + "Search Word : " + searchWord)
+            log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ str(self.request.user.id) + "Search Word : " + searchWord)
             return redirect('whatshouldido:error')
 
 
@@ -204,11 +204,16 @@ def groupArticleCreate(request, group_id):
         if check_auth_user_id_exist(request):
             user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
             group = get_object_or_404(Studygroups, groupid=group_id)
+
             if request.method == "POST":
+
                 category = int(request.POST['grouparticlecategory'][0])
                 if user_id.pk != group.groupmaster.pk and category == 1:
+                    log.warning("groupArticleCreate| User: " + str(user_id.pk) + " is not group master.")
                     return redirect('whatshouldido:error')
+
                 article_form = GroupArticlesForm(request.POST)
+
                 if article_form.is_valid():
                     article = article_form.save(commit=False)
                     article.grouparticlecategory = category
@@ -216,13 +221,19 @@ def groupArticleCreate(request, group_id):
                     article.userid = user_id
                     article.groupid = get_object_or_404(Studygroups, pk=group_id)
                     article.save()
+
+                    log.info("Article has written | User: " + str(user_id) + " Group : " + str(group_id))
+
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+
             context = {'form': GroupArticlesForm(), 'group': group}
             context.update(getUserContents(user_id))
             return render(request, "group-article-write.html", context)
+
         else:
             return redirect('whatshouldido:index')
     except:
+        log.error("Error Occurs groupArticleCreate.except 1| User: " + str(user_id.pk))
         return redirect('whatshouldido:error')
 
 
@@ -545,7 +556,7 @@ def uploadFile(request):
         file_type = filename[-1]
         print(file_type)
         file = ArticleFiles(
-            field_native_filename=filename[0]+'.'+file_type,
+            field_native_filename=filename[0] + '.' + file_type,
             articleid=GroupArticles.objects.get(pk=1),
             uploader=AuthUser.objects.get(pk=5),
             field_encr_filename=hashlib.sha256((uploaded_file.name + str(timezone.now())).encode()).hexdigest(),

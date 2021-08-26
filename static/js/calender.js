@@ -33,24 +33,22 @@ const renderCalender = () => {
     const firstDateIndex = dates.indexOf(1);
     const lastDateIndex = dates.lastIndexOf(TLDate);
     dates.forEach((date, i) => {
+        let parse_date =  arrrrr[4].slice(53) + arrrrr[5] + arrrrr[6]
+        let currnet_date = String(viewYear) +" "+ String(viewMonth+1) +" "+ String(date)
+
         const condition = i >= firstDateIndex && i < lastDateIndex + 1 ?
             'this' :
             'other';
         dates[i] = `
             <div class="date ${condition}">
-
                 <div class="date-itm">
                     ${date}
                 </div>
-
                 <div class="date_event">
                     <div class="event-itm">
-                        ${assignments}
-                        <br>
-                        ${calendar}
+                        ${(currnet_date == parse_date ? String(arrrrr[2].split(":")[1]) : '')}
                     </div>
                 </div>
-
             </div>
         `;
     });

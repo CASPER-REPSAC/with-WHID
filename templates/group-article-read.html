@@ -7,6 +7,7 @@
         {% endfor %}
         <br>
         ################# COMMENT #################
+        <br>
         {% for comment in comments %}
                 <form method="POST" action="{{ article_data.id }}/comment/delete" class="post-form">{% csrf_token %}
             <input type="hidden" name="commentid" value="{{ comment.commentid }}">
@@ -19,5 +20,7 @@
             {{ comment_form }}
             <button type="submit" class="save btn btn-default">[Save]</button>
         </form>
+
     </div>
+
 {% endblock %}
