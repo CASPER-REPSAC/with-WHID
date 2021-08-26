@@ -23,5 +23,9 @@
             </div>
             <div class="dates"></div>
         </div>
+        <script>
+            let data = "{{ data }}";
+            let assignments = "{% for assignments in data.assign %} {{ assignments.groupassignment }} <br> {% endfor %}" ;
+        </script>
         <script src="{% static 'js/calender.js' %}"></script>
 {% endblock %}

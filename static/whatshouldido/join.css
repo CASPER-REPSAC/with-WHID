@@ -4,7 +4,7 @@ div.logo > a.logo   {
     margin: 40px;
 }
 div.logo > a.logo > img {
-    width: 50px; height: 50px;
+    height: 80px;
 }
 form > input.button {
     margin-top: 20px;
