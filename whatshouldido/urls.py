@@ -37,6 +37,7 @@ urlpatterns = [
     path('group/create', views.groupCreate, name='groupcreate'),
     path('group/<int:group_id>', views.groupInfo, name='groupinfo'),
     path('group/<int:group_id>/manage', views.groupManage, name='groupmanage'),  # 이렇게. <-- How?
+    path('group/<int:group_id>/manage/create', views.createGroupPlan, name='creategroupplan'),
 
     path('group/<int:group_id>/article/<int:article_id>/comment/create', views.commentCreate, name='comment-create'),
     path('group/<int:group_id>/article/<int:article_id>/comment/delete', views.commentDelete, name='comment-delete'),

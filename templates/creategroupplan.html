@@ -4,7 +4,7 @@
 <div class="col-md-12">
     <div class="container">
 
-        <form method="POST" class="post-form" action="{% url 'whatshouldido:creategroupplan' group_id=7%}">
+        <form method="POST" class="post-form" action="group/{{group.id}}/manage/create">
            {%csrf_token%}
            {{form.as_p}}
            <button type="submit" class="save btn btn-default">Save</button>

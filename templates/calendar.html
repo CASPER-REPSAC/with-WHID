@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% if user.is_authenticated %}
 <!-- fullcalender -->
 <link href="{% static 'calendar/main.css' %}" rel="stylesheet">
 <script src="{% static 'calendar/main.js' %}"></script>
@@ -33,4 +34,5 @@
     
 </script>
 <div id='calendar'></div>
+{% endif %}
 {% endblock %}

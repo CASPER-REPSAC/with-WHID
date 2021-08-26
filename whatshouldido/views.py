@@ -4,6 +4,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic.edit import FormView
+from django.forms.models import model_to_dict
 from .forms import *
 from .models import *
 from django.http import QueryDict
@@ -16,7 +17,7 @@ log = logging.getLogger('django')
 def check_auth_user_id_exist(request):
     if '_auth_user_id' in dict(request.session):
         return True
-    log.error("Error Occurs : views.check_auth_user_id_exist False | User :"+ str(request.user.id) )
+    log.error("Error Occurs : views.check_auth_user_id_exist False | User " )
     return False
 
 
@@ -263,8 +264,8 @@ def groupArticleRead(request, group_id, article_id):
             context['groupname'] = article.groupid.groupname
             context['authorname'] = article.userid.username
             comments = GroupArticleComments.objects.filter(articleid=article_id)
-            context = {'article_data': context, "comments": comments,
-                       'comment_form': GroupArticleCommentsForm()}
+            context = {'article_data': context, 'comments': comments,'comment_form': GroupArticleCommentsForm()}
+            log.error("tr(comments.comment)")
             context.update(getUserContents(user_id))
             return render(request, 'group-article-read.html', context=context)
         else:
@@ -514,7 +515,7 @@ def groupCreate(request):
             form = StudygroupsForm()
             context = {'form': form}
             context.update(getUserContents(user_id))
-            log.info("groupCreate | User :"+ user_id)
+            log.info("groupCreate | User :"+ str(user_id))
             return render(request, 'group-make.html', context=context)
         else:
             return redirect('whatshouldido:index')
@@ -526,6 +527,7 @@ def groupCreate(request):
 def groupInfo(request, group_id):
     try:
         group_data = Studygroups.objects.get(groupid=group_id)
+        #group_members = UsersGroupsMapping.objects.get(groupidx=group_id)
         context = model_to_dict(group_data)
     except:
         print(Exception)
@@ -592,3 +594,31 @@ def uploadFile(request):
     return render(request, "file-upload.html", context={
         "files": documents
     })
+
+def createGroupPlan(request,group_id):
+    if request.method == "POST":
+        user_id = int(self.request.session['_auth_user_id'])
+        map = Studygroups.objects.get(groupid=group_id)
+        field =['groupid','groupname','grouppasscode','groupmaster']
+        udx=models_to_dict(map,field)
+        if(udx['groupmaster'] == user_id.pk):
+            form = GroupCalendarForm(request.POST)
+            if form.is_valid():
+                if (len(request.POST.get('groupplanname')) < 1) or (len(request.POST.get('groupplaninfo')) < 1):
+                    res = "길이가 너무 짧습니다."
+                else:
+                    plan = form.save(commit=False)
+                    plan.groupid = group_id
+                    #plan.groupplanname = request.POST.get('groupplanname')
+                    #plan.groupplaninfo = request.POST.get('groupplaninfo')
+                    #plan.groupplanlink = request.POST.get('groupplanlink')
+                    #plan.groupplanstart = request.POST.get('groupplanstart')
+                    #plan.groupplanend = request.POST.get('groupplanend')
+                    plan.save()
+                    return rendirect('index')
+        else:
+            return redirect('whatshouldido:error')
+    else:
+        form = GroupCalendarForm()
+    context = {'form':form}
+    return render(request, 'creategroupplan.html', context)

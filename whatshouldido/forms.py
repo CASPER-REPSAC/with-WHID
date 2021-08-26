@@ -79,17 +79,24 @@ class GroupAssignmentsForm(forms.ModelForm):
             'groupassignmentlimit': '과제 기한',
         }
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class TimeInput(forms.TimeInput):
+    input_type = 'time'
 
 class GroupCalendarForm(forms.ModelForm):
     class Meta:
         model = GroupCalendar
-        fields = ['groupplanname', 'groupplaninfo', 'groupplanlink', 'groupplanstart', 'groupplanend']
+        fields = ['groupplanname', 'groupplaninfo', 'groupplanlink', 'groupplandate', 'groupplantime']
         labels = {
             'groupplanname' : '일정 명',
             'groupplaninfo' : '일정 정보',
             'groupplanlink' : '접속 정보',
-            'groupplanstart' : '일정 시작 시간',
-            'groupplanend' : '일정 종료 시간',
+        }
+        widgets = {
+            'groupplandate' : DateInput(),
+            'groupplantime' : TimeInput()
         }
 
 class GroupArticleCommentsForm(forms.ModelForm):

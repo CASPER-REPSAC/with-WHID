@@ -18,7 +18,7 @@ SECRET_KEY = json_secret_key  # key 따로 관ㄹ
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # 최종본에 False
-
+DATE_INPUT_FORMATS=['%Y-%m-%d %H:%M']
 ALLOWED_HOSTS = ['test.floodnut.com', '127.0.0.1', '*']
 APPEND_SLASH = True
 

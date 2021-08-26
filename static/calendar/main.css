@@ -568,7 +568,7 @@ a.fc-event:hover {
   }
 /*
 A HORIZONTAL event
-*/
+*/ 
 .fc-h-event { /* allowed to be top-level */
   display: block;
   border: 1px solid #3788d8;

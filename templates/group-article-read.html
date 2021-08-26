@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{{comments}}
+{{comments.comment}}
 <header>
     <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
         <div class="container d-flex justify-content-between">
@@ -22,12 +22,25 @@
     {% for comment in comments %}
         <form method="POST" action="{{ article_data.id }}/comment/delete" class="post-form">
             {% csrf_token %}<input type="hidden" name="commentid" value="{{ comment.commentid }}">
-            <p>{{ comment.writer }} | {{ comment.comment }} | {{ comment.writedate }}   ||
-            <button type="submit" class="save btn btn-default">[Delete]</button></p>
+            <p>{{ comment.writer }} : &nbsp; &nbsp; &nbsp; {{ comment.comment }}            &nbsp &nbsp
+            <button type="submit" class="save btn btn-default">
+                <div class="col-auto">
+                    <input class="btn btn-primary" type="submit" role="button" value="삭제">
+                </div>
+            </button></p>   
         </form>
     {% endfor %}
 </div>
-<div>
+<form method="POST" action="{{ article_data.id }}/comment/create" class="post-form">{% csrf_token %}
+    {{ comment_form }}
+    <button type="submit" class="save btn btn-default"> 
+        <div class="col-auto">
+            <input class="btn btn-primary" type="submit" role="button" value="쓰기">
+        </div>
+    </button>
+</form>
+
+<div><!--
     <div class="row">
         <div class="col-xs-12">
             <form action="{{ article_data.id }}/comment/create"  method="POST">
@@ -39,13 +52,11 @@
                     </div>
                     <div class="row">
                         <div class="col-auto mr-auto"></div>
-                        <div class="col-auto">
-                            <input class="btn btn-primary" type="submit" role="button" value="글쓰기">
-                        </div>
+
                     </div>
                 </div>
             </form>
         </div>
-    </div>
+    </div>-->
 </div>
 {% endblock %}
