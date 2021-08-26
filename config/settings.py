@@ -13,8 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import json, os
 
-
-with open ('config/keys.json','r') as key_file:
+with open('config/keys.json', 'r') as key_file:
     json_file = json.load(key_file)
     json_secret_key = json_file["settings-secret-key"]
 
@@ -27,16 +26,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = json_secret_key #key 따로 관ㄹ
+SECRET_KEY = json_secret_key  # key 따로 관ㄹ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # 최종본에 False
+DEBUG = False  # 최종본에 False
 
-ALLOWED_HOSTS = ['test.floodnut.com','127.0.0.1']
-#APPEND_SLASH=False
+ALLOWED_HOSTS = ['test.floodnut.com', '127.0.0.1', '*']
+APPEND_SLASH = True
 
-#Session
-SESSION_COOKIE_AGE = 600   
+# Session
+SESSION_COOKIE_AGE = 600
 SESSION_SAVE_EVERY_REQUEST = True
 
 # Application definition
@@ -49,15 +48,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whatshouldido',
 
-    #google-auth setting
+    # google-auth setting
     'django.contrib.sites',
 
-    #allauth
+    # allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
-    #allauth provider
+    # allauth provider
     'allauth.socialaccount.providers.google',
 ]
 
@@ -76,7 +75,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,21 +90,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'manager',
-            'USER' : 'django',
-            'PASSWORD':'1234',
-            'HOST':'localhost',
-            'PORT':'3306',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'manager',
+        'USER': 'django',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
-
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -125,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -139,12 +135,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ BASE_DIR / 'static',]
+STATICFILES_DIRS = [BASE_DIR / 'static', ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -166,13 +161,12 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 2
-
+SITE_ID = 3
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/' 
-ACCOUNT_LOGOUT_REDIRECT_URL = "/" 
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 USE_X_FORWARDED_HOST = True
 
@@ -218,14 +212,14 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': BASE_DIR / 'logs/wsid.log',
-            'maxBytes': 1024*1024*5, 
+            'maxBytes': 1024 * 1024 * 5,
             'backupCount': 10,
             'formatter': 'standard',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'mail_admins','file'],
+            'handlers': ['console', 'mail_admins', 'file'],
             'level': 'INFO',
         },
         'django.server': {

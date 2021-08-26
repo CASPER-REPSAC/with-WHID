@@ -1,40 +1,71 @@
-from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from dataclasses import fields
-from django.core.paginator import Paginator
 from django.db.models import Q
-from django.views.generic.edit import FormView
-from django.contrib.sessions.models import Session
-from django.contrib.auth.models import User
-from django import forms as DjangoForm
-from django.utils import timezone
 from django.forms.models import model_to_dict
+from django.http.response import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+from django.views.generic.edit import FormView
 from .forms import *
 from .models import *
 from django.http import QueryDict
-import hashlib, logging
+import hashlib, logging, os
+
+
 log = logging.getLogger('django')
+
 
 def check_auth_user_id_exist(request):
     if '_auth_user_id' in dict(request.session):
         return True
     return False
 
+
+def getUserContents(user_id):
+    assign_list, article_list, registered_groups = [], [], list(UsersGroupsMapping.objects.filter(useridx=user_id))
+    for mapping_model in registered_groups:
+        assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
+        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
+    return {"data": {'assign': [x for x in map(model_to_dict, assign_list)],
+                     'article': [x for x in map(model_to_dict, article_list)],
+                     'groups': [x.groupidx for x in registered_groups]}}
+
+
 class StudygroupsView(FormView):
     form_class = GroupSearchForm
     template_name = 'group-search.html'
 
-    def form_valid(self, form):
+    def render_to_response(self, context, **response_kwargs):
         try:
-            searchWord = form.cleaned_data['search_word']
-            group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
-
-            context = {'form': form, 'search_term': searchWord, 'studygroups': group_list}
-            log.info("Search : StudygroupsView | User :"+ str(self.request.user.id) +"  Search Word : " + searchWord)
-            return render(self.request, self.template_name, context)
+            if check_auth_user_id_exist:
+                user_id = int(self.request.session['_auth_user_id'])
+                context.update(getUserContents(user_id))
+                response_kwargs.setdefault('content_type', self.content_type)
+                log.info("Search : StudygroupsView | User :"+ str(self.request.user.id) +"  Search Word : " + searchWord)
+                return self.response_class(
+                    request=self.request,
+                    template=self.get_template_names(),
+                    context=context,
+                    using=self.template_engine,
+                    **response_kwargs
+                )
         except:
             log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ self.request.user.id + "Search Word : " + searchWord)
             return redirect('whatshouldido:error')
+
+    def form_valid(self, form):
+        try:
+            if check_auth_user_id_exist:
+                user_id = int(self.request.session['_auth_user_id'])
+                searchWord = form.cleaned_data['search_word']
+                group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
+
+                context = {'form': form, 'search_term': searchWord, 'studygroups': group_list}
+                context.update(getUserContents(user_id))
+                return render(self.request, self.template_name, context)
+            else:
+                return redirect('whatshouldido:error')
+        except:
+            return redirect('whatshouldido:error')
+
 
 def check(request, pk):
     try:
@@ -103,21 +134,9 @@ def index(request):
     try:
         page = request.GET.get('page', 1)
         if check_auth_user_id_exist(request):
-            assign_list = []
-            article_list = []
             if request.method == 'GET':
                 user_id = int(request.session['_auth_user_id'])
-                usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
-                for mapping_model in usr_grp_mapping:
-                    assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by(
-                        'groupassignmentlimit')
-
-                for mapping_model in usr_grp_mapping:
-                    article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
-
-                context = {"data": {'assign': [x for x in map(model_to_dict, assign_list)],
-                                    'article': [x for x in map(model_to_dict, article_list)]}}
-                return render(request, 'calendar.html', context)
+                return render(request, 'calendar.html', context=getUserContents(user_id))
         return render(request, 'calendar.html')
     except:
         return redirect('whatshouldido:error')
@@ -135,8 +154,7 @@ def userinfo(request):
         # if request.method=="POST":
         uid = int(request.session['_auth_user_id'])
         model = UsersGroupsMapping.objects.filter(useridx=int(uid)).distinct()
-        context = {}
-        context['studygroups'] = model
+        context = {'studygroups': model}
         return render(request, "mypage.html", context)
     else:
         return redirect('whatshouldido:index')
@@ -192,6 +210,7 @@ def groupArticleCreate(request, group_id):
                     article.save()
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
             context = {'form': GroupArticlesForm(), 'group': group}
+            context.update(getUserContents(user_id))
             return render(request, "group-article-write.html", context)
         else:
             return redirect('whatshouldido:index')
@@ -207,7 +226,9 @@ def groupArticleList(request, group_id):
             article_data = [article_obj
                             for article_obj in map(model_to_dict,
                                                    [article_obj for article_obj in article_data])]
-            return render(request, 'group-article-list.html', {'article_data': article_data})
+            context = {'article_data': article_data}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-article-list.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
@@ -224,9 +245,10 @@ def groupArticleRead(request, group_id, article_id):
             context['groupname'] = article.groupid.groupname
             context['authorname'] = article.userid.username
             comments = GroupArticleComments.objects.filter(articleid=article_id)
-            return render(request, 'group-article-read.html',
-                          {'article_data': context, "comments": comments,
-                           'comment_form': GroupArticleCommentsForm()})
+            context = {'article_data': context, "comments": comments,
+                       'comment_form': GroupArticleCommentsForm()}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-article-read.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
@@ -295,6 +317,7 @@ def groupArticleEdit(request, group_id, article_id):
                     article.save()
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
             context = {'form': GroupArticlesForm(instance=article), 'group': group, 'article': article}
+            context.update(getUserContents(user_id))
             return render(request, "group-article-write.html", context)
         else:
             return redirect('whatshouldido:index')
@@ -324,13 +347,14 @@ def groupArticleDelete(request, group_id, article_id):
 def groupAssignmentList(request, group_id):
     try:
         if check_auth_user_id_exist(request):
-            getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
+            user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
             assign_data = GroupAssignments.objects.filter(groupid=group_id)
             assign_data = [assign_obj
                            for assign_obj in map(model_to_dict,
                                                  [assign_obj for assign_obj in assign_data])]
-
-            return render(request, 'group-assign-list.html', {'assign_data': assign_data})
+            context = {'assign_data': assign_data}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-assign-list.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
@@ -352,6 +376,7 @@ def groupAssignmentCreate(request, group_id):
                     assign.save()
                     return redirect('whatshouldido:group-assign-read', group_id=group_id, assign_id=assign.pk)
             context = {'form': GroupAssignmentsForm()}
+            context.update(getUserContents(user_id))
             return render(request, "group-assign-write.html", context)
         else:
             return redirect('whatshouldido:index')
@@ -376,6 +401,7 @@ def groupAssignmentEdit(request, group_id, assign_id):
                     return redirect('whatshouldido:group-assign-read',
                                     group_id=group_id, article_id=assign.pk)
             context = {'form': GroupAssignmentsForm(instance=assign)}
+            context.update(getUserContents(user_id))
             return render(request, "group-assign-write.html", context)
         else:
             return redirect('whatshouldido:index')
@@ -386,12 +412,13 @@ def groupAssignmentEdit(request, group_id, assign_id):
 def groupAssignmentRead(request, group_id, assign_id):
     try:
         if check_auth_user_id_exist(request):
-            getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
+            user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
             # 유저와 그룹이 맵핑 되어있는지 확인 아니면 404 뿜뿜
             assign_data = get_object_or_404(GroupAssignments, id=assign_id)
-            context = model_to_dict(assign_data)
 
-            return render(request, 'group-assign-read.html', {'assign_data': context})
+            context = {'assign_data': model_to_dict(assign_data)}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-assign-read.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
@@ -449,7 +476,9 @@ def groupCreate(request):
                     print(group.grouppasscode)
                     return redirect('whatshouldido:groupinfo', group_id=group.pk)
             form = StudygroupsForm()
-            return render(request, 'group-make.html', {'form': form})
+            context = {'form': form}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-make.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
@@ -479,34 +508,44 @@ def groupManage(request, group_id):
                     group.grouppasscode = hashlib.sha256(str(group.grouppasscode).encode()).hexdigest()
                     group.groupmaster = user_id
                     group.save()
-                    print(group.grouppasscode)
                     return redirect('whatshouldido:groupinfo', group_id=group.pk)
             form = StudygroupsForm(instance=group)
-            return render(request, 'group-manage.html', {'form': form})
+            context = {'form': form}
+            context.update(getUserContents(user_id))
+            return render(request, 'group-manage.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except Exception:
         return redirect('whatshouldido:error')
 
 
+def changeFileName(file):
+    pass
+
+
 ###############################
+allowed_extension = ('zip')
+import re
+
+
 def uploadFile(request):
     if request.method == "POST":
-        # Fetching the form data
-        fileTitle = request.POST["fileTitle"]
-        print(fileTitle)
         uploaded_file = request.FILES["uploadedFile"]
-
-        # Saving the information in the database
+        filename = str(uploaded_file.name).split('.')
+        if len(filename) != 2:
+            return redirect("whatshouldido:error")
+        file_type = filename[-1]
+        print(file_type)
         file = ArticleFiles(
-            field_native_filename=fileTitle,
-            uploaded_file=uploaded_file,
+            field_native_filename=filename[0]+'.'+file_type,
             articleid=GroupArticles.objects.get(pk=1),
             uploader=AuthUser.objects.get(pk=5),
-            field_encr_filename=hashlib.sha256((fileTitle+str(timezone.now())).encode()).hexdigest(),
+            field_encr_filename=hashlib.sha256((uploaded_file.name + str(timezone.now())).encode()).hexdigest(),
             field_file_size=1,
-            field_file_type='sad'
+            field_file_type=file_type,
+            uploaded_file=uploaded_file
         )
+        file.uploaded_file.name = file.field_encr_filename
         file.save()
 
     documents = ArticleFiles.objects.all()

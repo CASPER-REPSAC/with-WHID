@@ -51,6 +51,9 @@
                   {% endfor %}
                 </ul>
               </div>
+                {% for i in data.groups %}
+                    <li>{{ i.groupname }}</li>
+                  {% endfor %}
             {% endif %}
           </section>
           <section class="white">
