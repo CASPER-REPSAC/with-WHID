@@ -12,7 +12,8 @@ from django.forms.models import model_to_dict
 from .forms import *
 from .models import *
 from django.http import QueryDict
-
+import logging
+log = logging.getLogger('django')
 
 class StudygroupsView(FormView):
     form_class = GroupSearchForm
@@ -55,6 +56,7 @@ def check(request,pk):
                     test=group.get(grouppasscode=input_passcode)
                     print(test.grouppasscode)
                 except:
+                    log.warning(" Group Passcode invalid |Input : " + str(input_passcode) +"  User " + str(uid) )
                     return HttpResponse("입장 코드가 올바르지 않습니다.")
                 context={'groupss': group }
                 user = AuthUser.objects.get(id=int(uid))
@@ -63,10 +65,13 @@ def check(request,pk):
                 if(mapping[1]==True):
                     return render(request, 'join.html', context)
                 else:
+                    log.warning(" Duplicated_Group_Join_Try | During User " + str(uid) + " ==>> Group " + str(pk))
                     return HttpResponse("이미 가입된 그룹입니다.")
             except:
+                log.error(" Group Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
                 return render(request, 'error.html')
         else:
+            log.error(" User Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
             return render(request,'error.html')
 
 
@@ -228,7 +233,7 @@ def groupArticleEdit(request, group_id, article_id):
     article = get_object_or_404(GroupArticles, pk=article_id)
     if request.method == "POST":
         # 이 글이 현재 유저의 소유인지 확인
-        if user_id == article.userid:
+        if user_id.id != article.userid.id:
             return redirect('whatshouldido:group-article-list', group_id=group_id)
         category = int(request.POST['grouparticlecategory'][0])
         if user_id.pk != group.groupmaster.pk and category == 1:
