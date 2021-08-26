@@ -1,63 +1,124 @@
 {% load static %}
 <!doctype html>
 <html lang="ko">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-witdh, initial-scale=1, shrink-to-fit=no">
-        <title> 일 벌리고 실천하기 </title>
-        <link rel="stylesheet" type="text/css" href="{% static 'whatshouldido/style.css' %}">
-    </head>
-    <body>
-        <aside>
-          <div class="login">
-            <a href="/" class="logo"><img src="{% static 'images/logo.png' %}"></a>
-              {% include "auth.html" %}
-          </div>
-          <div class="todolist">
-            <ul id="main-menu">
-              <li><a href="/" style="display: block;"><span class="name">홈으로</span></a></li>
-              <li><a href="/search/" style="display: block;"><span class="name">그룹찾기</span></a></li>
-              <li><a href="/userinfo/" style="display: block;"><span class="name">내 그룹</span></a></li>
-              <li><a href="/search/" style="display: block;"><span class="name">그룹찾기</span></a></li>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>일벌리고 수습하기</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'bootstrap/css/sidebars.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <main>
+      <h1 class="visually-hidden">Sidebars examples</h1>
+      <div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+        <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+          <img src="{% static 'images/logo.png' %}" style="height:80px;">
+        </a>
+        {% include "auth.html" %}
+        <br>
+        <ul class="list-unstyled ps-0">
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+              홈으로
+            </button>
+            <div class="collapse show" id="home-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-dark rounded">Overview</a></li>
+                <li><a href="#" class="link-dark rounded">Updates</a></li>
+                <li><a href="#" class="link-dark rounded">Reports</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+              Dashboard
+            </button>
+            <div class="collapse" id="dashboard-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-dark rounded">Overview</a></li>
+                <li><a href="#" class="link-dark rounded">Weekly</a></li>
+                <li><a href="#" class="link-dark rounded">Monthly</a></li>
+                <li><a href="#" class="link-dark rounded">Annually</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+              Orders
+            </button>
+            <div class="collapse" id="orders-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-dark rounded">New</a></li>
+                <li><a href="#" class="link-dark rounded">Processed</a></li>
+                <li><a href="#" class="link-dark rounded">Shipped</a></li>
+                <li><a href="#" class="link-dark rounded">Returned</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="border-top my-3"></li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+              Account
+            </button>
+            <div class="collapse" id="account-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#" class="link-dark rounded">New...</a></li>
+                <li><a href="#" class="link-dark rounded">Profile</a></li>
+                <li><a href="#" class="link-dark rounded">Settings</a></li>
+                <li><a href="#" class="link-dark rounded">Sign out</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="b-example-divider"></div>
+      <!-- Sidebars End -->
+      <!-- init container -->
+      <div class="container" style="overflow: auto;">
+        {% if user.is_authenticated %}
+        <div class="row">
+          <div class="col-sm-12 col-md-6 border-bottom">
+            <div>공지사항</div>
+            <ul>
+              {% for article in data.article %}
+                <li>
+                  <a href="/group/{{ article.groupid }}/article/{{ article.id }}">
+                    <span class="name">{{article.grouparticletitle}}</span><span class="count">{{ article.uploaddate }}</span>
+                  </a>
+                </li>
+              {% endfor %}
             </ul>
           </div>
-          <div class="footer">
-              <a href="/">이용약관</a> - <a href="/">개인정보처리방침</a>
+          <div class="col-md-6 border-bottom">
+            <div>과제</div>
+            <ul>
+              {% for assign in data.assign %}
+                <li>
+                  <a href="/group/{{ assign.groupid }}/assign/{{ assign.id }}">
+                    <span class="name">{{ assign.groupassignment }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
-        </aside>
-          <section class="init">
+        </div>
+        {% endif %}
+        <div class="row">
+          <div class="col-xs-12" style="text-align: center;">
             {% if user.is_authenticated %}
-              <div class="notice">
-                <div class="title">공지사항</div>
-                <ul>
-                  {% for article in data.article %}
-                    <li>
-                      <a href="/group/{{ article.groupid }}/article/{{ article.id }}">
-                        | {{ article.uploaddate }} |  {{article.grouparticletitle}}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-              <div class="notice">
-                <div class="title">과제</div>
-                <ul>
-                  {% for assign in data.assign %}
-                    <li>
-                      <a href="/group/{{ assign.groupid }}/assign/{{ assign.id }}">
-                        {{assign.groupassignment}}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
+              {% block content %}
+              {% endblock %}
             {% endif %}
-          </section>
-          <section class="white">
-          {% if user.is_authenticated %}
-            {% block content %}
-            {% endblock %}
-          {% endif %}
-          </section>
-    </body>
+          </div>
+        </div>
+    </div>
+    </main>
+    <script src="{% static 'bootstrap/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/sidebars.js' %}"></script>
+  </body>
 </html>

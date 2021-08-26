@@ -45,7 +45,7 @@
 }
 
 .day {
-  width: calc(100% / 8);
+  width: calc(100% / 7);
   text-align: center;
   transition: all .3s;
 }
@@ -59,7 +59,7 @@
 
 .date {
   cursor: pointer;
-  width: calc(100% / 8);
+  width: calc(100% / 7);
   height: 150px;
   text-align: left;
   border: 1px solid #333333;
