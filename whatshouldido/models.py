@@ -193,14 +193,13 @@ class GroupCalendar(models.Model):
     groupplanid = models.AutoField(db_column='groupPlanid', primary_key=True)  # Field name made lowercase.
     groupplanname = models.CharField(db_column='groupPlanname', max_length=64)  # Field name made lowercase.
     groupplaninfo = models.CharField(db_column='groupPlaninfo', max_length=128)  # Field name made lowercase.
-    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True,
-                                     null=True)  # Field name made lowercase.
-    groupplanstart = models.DateTimeField(db_column='groupPlanstart')  # Field name made lowercase.
-    groupplanend = models.DateTimeField(db_column='groupPlanend')  # Field name made lowercase.
+    groupplanlink = models.CharField(db_column='groupPlanlink', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    groupplandate = models.DateTimeField(db_column='groupPlandate')  # Field name made lowercase.
+    groupplantime = models.DateTimeField(db_column='groupPlantime')  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'group_calendar'
+        db_table = 'group_calendar'  # studygroups가 아니라 별개의 테이블이 있음.
 
 
 class GroupArticleComments(models.Model):
