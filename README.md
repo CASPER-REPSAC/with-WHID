@@ -3,9 +3,9 @@
 > 부제 "What should I do?"  
 
 ## Members  
-> Floodnut : django-server develop & project leader.     
-> Pawn : server config & web view.  
-> W00 : django-server develop.  
+> Floodnut : 팀장, 서버 환경 설정 및 백 엔드 개발  
+> Pawn : 팀원 1, 프론트 엔드 개발  
+> W00 : 팀원 2, 백 엔드 개발  
   
 ## Todo  
 > 1. 서버 설정 준비  

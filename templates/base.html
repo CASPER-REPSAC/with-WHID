@@ -32,12 +32,13 @@
               <div class="notice">
                 <div class="title">공지사항</div>
                 <ul>
-                  {% for article in data.article %}
+                  {% for article in data.article%}
                     <li>
                       <a href="/group/{{ article.groupid }}/article/{{ article.id }}">
-                        | {{ article.uploaddate }} |  {{article.grouparticletitle}}
+                        | {{ article.uploaddate }} | {{article.grouparticletitle}}
                       </a>
                     </li>
+                    <hr>
                   {% endfor %}
                 </ul>
               </div>
