@@ -1,0 +1,35 @@
+div.logo > a.logo   {
+    display: block;
+    text-align: center;
+    margin: 40px;
+}
+div.logo > a.logo > img {
+    width: 50px; height: 50px;
+}
+form > input.button {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%; border-radius: 5px;
+    bottom: 0; height: 40px; line-height: 40px;
+	box-sizing: border-box;
+	font-size: 14px; font-weight: bold; text-align: center;
+}
+form > input.button.submit {
+    display: block;
+	border: 1px solid #e3e3e3;
+	color: #fff;
+	background-color: #7a6563;
+}
+
+.auth-body {
+    display: flex;
+    justify-content: center;
+}
+.auth-main {
+	display: block;
+    text-align: center;
+	padding: 20px 15px; width:350px; height: 270px;
+	box-sizing: border-box;
+	border: 1px solid #a8a8a8; border-radius: 10px;
+	background-color: #f6f8fa;
+}

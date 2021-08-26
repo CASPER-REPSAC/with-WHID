@@ -12,13 +12,14 @@ from django.forms.models import model_to_dict
 from .forms import *
 from .models import *
 from django.http import QueryDict
-import hashlib
-
+import hashlib, logging
 
 def check_auth_user_id_exist(request):
     if '_auth_user_id' in dict(request.session):
         return True
     return False
+
+log = logging.getLogger('django')
 
 
 class StudygroupsView(FormView):
@@ -46,7 +47,6 @@ def groupsearch(request,search_term):
     print(context)
     return render(request,"base.html",context)
 '''
-
 
 def check(request, pk):
     try:
@@ -79,6 +79,40 @@ def check(request, pk):
         return redirect('whatshouldido:index')
     except:
         return redirect('whatshouldido:error')
+
+''' old check
+def check(request,pk):
+    if request.method=="POST":
+        uid = request.session['_auth_user_id']
+        #skey=request.session.session_key
+        #sessions=Session.objects.get(session_key=skey)
+        #s_data = sessions.get_decoded()
+        if(uid == str(request.user.id) ):
+            input_passcode = request.POST.get('passcode')
+            try:
+                group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
+                try:
+                    test=group.get(grouppasscode=input_passcode)
+                    print(test.grouppasscode)
+                except:
+                    log.warning(" Group Passcode invalid |Input : " + str(input_passcode) +"  User " + str(uid) )
+                    return HttpResponse("입장 코드가 올바르지 않습니다.")
+                context={'groupss': group }
+                user = AuthUser.objects.get(id=int(uid))
+                groups = Studygroups.objects.get(groupid=pk)
+                mapping = UsersGroupsMapping.objects.get_or_create(useridx=user,groupidx=groups)
+                if(mapping[1]==True):
+                    return render(request, 'join.html', context)
+                else:
+                    log.warning(" Duplicated_Group_Join_Try | During User " + str(uid) + " ==>> Group " + str(pk))
+                    return HttpResponse("이미 가입된 그룹입니다.")
+            except:
+                log.error(" Group Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
+                return render(request, 'error.html')
+        else:
+            log.error(" User Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
+            return render(request,'error.html')
+'''
 
 
 class MappingView(FormView):
@@ -129,6 +163,7 @@ def index(request):
         return render(request, 'calendar.html')
     except:
         return redirect('whatshouldido:error')
+
 
 
 def error(request):
