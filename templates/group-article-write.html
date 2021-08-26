@@ -1,30 +1,41 @@
 {% extends 'base.html' %}
-
 {% block content %}
-    <div class="wrap">
-        <h1>Article Write</h1>
-            <form method="POST" class="post-form">{% csrf_token %}
-                    <p><label for="id_grouparticletitle">게시글 제목:</label>
-                        <input type="text" name="grouparticletitle" maxlength="64" required="" id="id_grouparticletitle"
-                        value="{{ article.grouparticletitle }}"></p>
-                    <p><label for="id_grouparticlecontent">게시글 내용:</label>
-                        <input type="text" name="grouparticlecontent" maxlength="150" required="" id="id_grouparticlecontent"
-                        value="{{ article.grouparticlecontent }}"></p>
-                    <p><label for="id_grouparticlecategory">Grouparticlecategory:</label>
-                        <select name="grouparticlecategory" required="" id="id_grouparticlecategory" multiple="">
-                                {% if user.id == group.groupmaster.id %}
-                                        <option value="1"
-                                        {% if article.grouparticlecategory == 1 %}
-                                                selected{% endif %}>공지사항</option>
-                                {% endif %}
-                                <option value="2"
-                                {% if article.grouparticlecategory == 2 %}
-                                        selected{% endif %}>카테고리 1</option>
-                                <option value="3"
-                                {% if article.grouparticlecategory == 3%}
-                                        selected{% endif %}>카테고리 2</option>
-                    </select></p>
-                <button type="submit" class="save btn btn-default">[Save]</button>
-            </form>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <strong>공지사항</strong>
+            </a>
+        </div>
     </div>
+</header>
+<div class="container">
+    <form action="/post" method="post">
+        {% csrf_token %}
+        <div class="form-group row">
+            <label for="inputTitle" class="col-sm-2 col-form-label"><strong>제목</strong></label>
+            <div class="col-sm-10">
+                <input type="text" name="title" class="form-control" id="inputTitle">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputAuthor" class="col-sm-2 col-form-label"><strong>작성자</strong></label>
+            <div class="col-sm-10">
+                <input type="text" name="author" class="form-control" id="inputAuthor">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputContent" class="col-sm-2 col-form-label"><strong>내용</strong></label>
+            <div class="col-sm-10">
+                <textarea type="text" name="content" class="form-control" id="inputContent"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto mr-auto"></div>
+            <div class="col-auto">
+                <input class="btn btn-primary" type="submit" role="button" value="글쓰기">
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
