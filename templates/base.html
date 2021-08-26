@@ -31,7 +31,11 @@
                 <div class="title">공지사항</div>
                 <ul>
                   {% for article in data.article %}
-                    <li><a href="/group/{{ article.groupid }}/article/{{ article.id }}">{{article.grouparticletitle}}}</a></li>
+                    <li>
+                      <a href="/group/{{ article.groupid }}/article/{{ article.id }}">
+                        | {{ article.uploaddate }} |  {{article.grouparticletitle}}
+                      </a>
+                    </li>
                   {% endfor %}
                 </ul>
               </div>
@@ -39,7 +43,11 @@
                 <div class="title">과제</div>
                 <ul>
                   {% for assign in data.assign %}
-                    <li><a href="/group/{{ assign.groupid }}/assign/{{ assign.id }}">{{assign.groupassignment}}</a></li>
+                    <li>
+                      <a href="/group/{{ assign.groupid }}/assign/{{ assign.id }}">
+                        {{assign.groupassignment}}
+                      </a>
+                    </li>
                   {% endfor %}
                 </ul>
               </div>

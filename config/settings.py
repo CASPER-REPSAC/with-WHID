@@ -33,7 +33,7 @@ SECRET_KEY = json_secret_key #key 따로 관ㄹ
 DEBUG = False # 최종본에 False
 
 ALLOWED_HOSTS = ['test.floodnut.com','127.0.0.1']
-APPEND_SLASH=False
+#APPEND_SLASH=False
 
 #Session
 SESSION_COOKIE_AGE = 600   

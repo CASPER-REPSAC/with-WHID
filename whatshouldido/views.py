@@ -13,12 +13,6 @@ from .forms import *
 from .models import *
 from django.http import QueryDict
 import hashlib, logging
-
-def check_auth_user_id_exist(request):
-    if '_auth_user_id' in dict(request.session):
-        return True
-    return False
-
 log = logging.getLogger('django')
 
 def check_auth_user_id_exist(request):
@@ -36,21 +30,11 @@ class StudygroupsView(FormView):
             group_list = Studygroups.objects.filter(Q(groupname__icontains=searchWord)).distinct()
 
             context = {'form': form, 'search_term': searchWord, 'studygroups': group_list}
+            log.info("Search : StudygroupsView | User :"+ str(self.request.user.id) +"  Search Word : " + searchWord)
             return render(self.request, self.template_name, context)
         except:
+            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ self.request.user.id + "Search Word : " + searchWord)
             return redirect('whatshouldido:error')
-
-
-'''
-def groupsearch(request,search_term):
-    if request.method == 'GET':
-        searchWord = search_term.cleaned_data['search_word']
-        print(searchWord)
-        group_list = Studygroups.objects.order_by('groupname')
-        context = {'studygroups' : group_list }
-    print(context)
-    return render(request,"base.html",context)
-'''
 
 def check(request, pk):
     try:
@@ -58,67 +42,37 @@ def check(request, pk):
             if request.method == "POST":
                 uid = int(request.session['_auth_user_id'])
                 if uid != int(request.user.id):
+                    log.error("User ID is Tampered |" + str(uid) + " ==> " + request.user.id)
                     return render(request, 'error.html')
-                # skey=request.session.session_key
-                # sessions=Session.objects.get(session_key=skey)
-                # s_data = sessions.get_decoded()
                 else:
                     input_passcode = hashlib.sha256(str(request.POST.get('passcode')).encode()).hexdigest()
                     try:
                         group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
                         try:
                             test = group.get(grouppasscode=input_passcode)
+                            print(test)
                         except:
+                            log.warning("Invalid passcode | User " + str(uid) + " ==>  Input: " + str(request.Post.get('passcode')))
                             return HttpResponse("입장 코드가 올바르지 않습니다.")
                         context = {'groupss': group}
                         user = AuthUser.objects.get(id=int(uid))
                         groups = Studygroups.objects.get(groupid=pk)
                         mapping = UsersGroupsMapping.objects.get_or_create(useridx=user, groupidx=groups)
                         if not mapping[1]:
+                            log.warning("Duplicated Group Join | User " + str(uid) + " ==> Group: " + str(pk))
                             return HttpResponse("이미 가입된 그룹입니다.")
                         else:
+                            log.info("User Joined Group | User " + str(uid) + " ==> Group" + str(pk))
                             return render(request, 'join.html', context)
                     except:
+                        log.error("Error Occurs : views.check.except 1 | User " + str(uid))
                         return render(request, 'error.html')
-        return redirect('whatshouldido:index')
-    except:
-        return redirect('whatshouldido:error')
-
-''' old check
-def check(request,pk):
-    if request.method=="POST":
-        uid = request.session['_auth_user_id']
-        #skey=request.session.session_key
-        #sessions=Session.objects.get(session_key=skey)
-        #s_data = sessions.get_decoded()
-        if(uid == str(request.user.id) ):
-
-            input_passcode = request.POST.get('passcode')
-            try:
-                group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
-                try:
-                    test=group.get(grouppasscode=input_passcode)
-                    print(test.grouppasscode)
-                except:
-                    log.warning(" Group Passcode invalid |Input : " + str(input_passcode) +"  User " + str(uid) )
-                    return HttpResponse("입장 코드가 올바르지 않습니다.")
-                context={'groupss': group }
-                user = AuthUser.objects.get(id=int(uid))
-                groups = Studygroups.objects.get(groupid=pk)
-                mapping = UsersGroupsMapping.objects.get_or_create(useridx=user,groupidx=groups)
-                if(mapping[1]==True):
-                    return render(request, 'join.html', context)
-                else:
-                    log.warning(" Duplicated_Group_Join_Try | During User " + str(uid) + " ==>> Group " + str(pk))
-                    return HttpResponse("이미 가입된 그룹입니다.")
-            except:
-                log.error(" Group Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
-                return render(request, 'error.html')
         else:
-            log.error(" User Information Tampered | During User " + str(uid) + " ==>> Group " + str(pk))
-            return render(request,'error.html')
-'''
-
+            log.error("Error Occurs : views.check.except 2 | User NONE")
+            return redirect('whatshouldido:error')
+    except:
+        log.error("Unknown Error Occurs : views.check.except 3 | User " + str(uid))
+        return redirect('whatshouldido:error')
 
 class MappingView(FormView):
     form_class = UsersGroupsMappingForm
@@ -133,7 +87,6 @@ class MappingView(FormView):
         except:
             return redirect('whatshouldido:error')
 
-
 def join(request, pk):
     try:
         if request.method == "GET":
@@ -144,7 +97,6 @@ def join(request, pk):
             return render(request, 'join.html', context)
     except:
         return redirect('whatshouldido:error')
-
 
 # Default Page
 def index(request):
@@ -170,17 +122,13 @@ def index(request):
     except:
         return redirect('whatshouldido:error')
 
-
 def error(request):
     return render(request, "error.html")
 
-
 # Personal Feature
-
 
 def socialauth(request, exception):
     return render(request, "socialauth.html")
-
 
 def userinfo(request):
     if check_auth_user_id_exist(request):
@@ -192,7 +140,6 @@ def userinfo(request):
         return render(request, "mypage.html", context)
     else:
         return redirect('whatshouldido:index')
-
 
 def calendarDetail(request, date_time: str):
     try:
@@ -276,7 +223,7 @@ def groupArticleRead(request, group_id, article_id):
             context = model_to_dict(article)
             context['groupname'] = article.groupid.groupname
             context['authorname'] = article.userid.username
-            comments = GroupArticleComments.objects.all()
+            comments = GroupArticleComments.objects.filter(articleid=article_id)
             return render(request, 'group-article-read.html',
                           {'article_data': context, "comments": comments,
                            'comment_form': GroupArticleCommentsForm()})
