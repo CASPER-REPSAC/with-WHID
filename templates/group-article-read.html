@@ -1,14 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="wrap">
-        <h1>Article Read</h1>
-        {% for key, value in article_data.items %}
-            <p>article_data.{{ key }} : {{ value }}</p>
-        {% endfor %}
-        <br>
-        ################ Uploaded File ################
-        <br>
-        <style>
+{{comments}}
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <strong>공지사항</strong>
+            </a>
+        </div>
+    </div>
+</header>
+<div class="row">
+    <div class="col-xs-12" style="text-align: left;">
+        <div class="border-bottom" style="font-size: 40px;"><strong>{{ article_data.grouparticletitle }}</strong></div>
+        <div class="border-bottom" style="font-size: 20px; padding: 20px;">
+            {{ article_data.grouparticlecontent }}
+        </div>
+    </div>
+</div>
+<div class="col-xs-12">
+    {% for comment in comments %}
+        <form method="POST" action="{{ article_data.id }}/comment/delete" class="post-form">
+            {% csrf_token %}<input type="hidden" name="commentid" value="{{ comment.commentid }}">
+            <p>{{ comment.writer }} | {{ comment.comment }} | {{ comment.writedate }}   ||
+            <button type="submit" class="save btn btn-default">[Delete]</button></p>
+        </form>
+    {% endfor %}
+</div>
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form action="{{ article_data.id }}/comment/create"  method="POST">
+                <div class="form-group row">
+                    <label for="inputContent" class="col-sm-2 col-form-label"><strong>의견쓰기</strong></label>
+                    <div class="col-sm-10">
+                        {% csrf_token %}
+                        <textarea type="text" name="content" class="form-control"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-auto mr-auto"></div>
+                        <div class="col-auto">
+                            <input class="btn btn-primary" type="submit" role="button" value="글쓰기">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+  <style>
         table {
             width: 50%;
             text-align: center;
@@ -37,22 +76,5 @@
             </tr>
         {% endfor %}
     </table>
-        <br>
-        ################# COMMENT #################
-        <br>
-        {% for comment in comments %}
-                <form method="POST" action="{{ article_data.id }}/comment/delete" class="post-form">{% csrf_token %}
-            <input type="hidden" name="commentid" value="{{ comment.commentid }}">
-                    <p>{{ comment.writer }} | {{ comment.comment }} | {{ comment.writedate }}   ||
-                <button type="submit" class="save btn btn-default">[Delete]</button></p>
-            </form>
-        {% endfor %}
-        <br>
-        <form method="POST" action="{{ article_data.id }}/comment/create" class="post-form">{% csrf_token %}
-            {{ comment_form }}
-            <button type="submit" class="save btn btn-default">[Save]</button>
-        </form>
-
-    </div>
-
+</div>
 {% endblock %}
