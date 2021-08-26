@@ -38,6 +38,8 @@ const renderCalender = () => {
         const condition = i >= firstDateIndex && i < lastDateIndex + 1 ?
             'this' :
             'other';
+        let parse_date =  arrrrr[4].slice(53) + arrrrr[5] + arrrrr[6]
+        let currnet_date = String(viewYear) +" "+ String(viewMonth+1) +" "+ String(date)
         dates[i] = `
             <div class="date ${condition}">
 
@@ -47,9 +49,9 @@ const renderCalender = () => {
 
                 <div class="date_event">
                     <div class="event-itm">
-                        ${assignments}
-                        ${calendar}
-                        ${typeof(arrrrr)}
+                     ⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺<br>
+                     ${arrrrr[4].split('(')[1]}-${arrrrr[5]}-${arrrrr[6]} 
+                    <a href=/calendardetail/${arrrrr[2]}>${(currnet_date == parse_date ? "[과제] "+String(arrrrr[2].split(":")[1]) : '')}</a>
                     </div>
                 </div>
 
