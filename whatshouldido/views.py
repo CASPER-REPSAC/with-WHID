@@ -4,13 +4,24 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic.edit import FormView
+
 from django.forms.models import model_to_dict
+
+
+from django.views.generic import View
+from django.views.generic.detail import SingleObjectMixin
+from django.http import FileResponse
+from django.core.files.storage import FileSystemStorage
+
 from .forms import *
 from .models import *
 from django.http import QueryDict
-import hashlib, logging, os
+import hashlib, logging, os, re
 
+allowed_extension = ('zip')
 
+not_allowed_characters = re.compile(r"[~!@#$%^&*=\[\]{}\"\'`]")
+file_size_limit = 8 * 1024 * 1024  # 8 Byte * 1024 * 1024 = 8 MB
 log = logging.getLogger('django')
 
 
@@ -22,20 +33,22 @@ def check_auth_user_id_exist(request):
 
 
 def getUserContents(user_id):
-    assign_list, article_list, calendar_list, registered_groups = [], [], [],list(UsersGroupsMapping.objects.filter(useridx=user_id))
+    assign_list, article_list, calendar_list, registered_groups = [], [], [], list(
+        UsersGroupsMapping.objects.filter(useridx=user_id))
     for mapping_model in registered_groups:
         assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
-        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx,grouparticlecategory=1).order_by('-uploaddate')
+        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx, grouparticlecategory=1).order_by(
+            '-uploaddate')
         calendar_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
-    log.info("getUserContents | User :"+ str(user_id))
+    log.info("getUserContents | User :" + str(user_id))
     return {
-            "data": {
-                    'assign': [x for x in map(model_to_dict, assign_list)],
-                    'article': [x for x in map(model_to_dict, article_list)],
-                    'calendars' :[x for x in map(model_to_dict, calendar_list)],
-                    'groups': [x.groupidx for x in registered_groups]
-                    }
-            }
+        "data": {
+            'assign': [x for x in map(model_to_dict, assign_list)],
+            'article': [x for x in map(model_to_dict, article_list)],
+            'calendars': [x for x in map(model_to_dict, calendar_list)],
+            'groups': [x.groupidx for x in registered_groups]
+        }
+    }
 
 
 class StudygroupsView(FormView):
@@ -56,7 +69,7 @@ class StudygroupsView(FormView):
                     **response_kwargs
                 )
         except:
-            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ str(self.request.user.id ))
+            log.error("Error Occurs : views.StudygroupsView.except 1 | User :" + str(self.request.user.id))
             return redirect('whatshouldido:error')
 
     def form_valid(self, form):
@@ -68,13 +81,15 @@ class StudygroupsView(FormView):
 
                 context = {'form': form, 'search_term': searchWord, 'studygroups': group_list}
                 context.update(getUserContents(user_id))
-                log.info("Search : enter StudygroupsView | User :"+ str(self.request.user.id)+ "Search Word : " + searchWord)
+                log.info("Search : enter StudygroupsView | User :" + str(
+                    self.request.user.id) + "Search Word : " + searchWord)
                 return render(self.request, self.template_name, context)
             else:
-                log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ str(self.request.user.id ))
+                log.error("Error Occurs : views.StudygroupsView.except 2 | User :" + str(self.request.user.id))
                 return redirect('whatshouldido:error')
         except:
-            log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ str(self.request.user.id) + "Search Word : " + searchWord)
+            log.error("Error Occurs : views.StudygroupsView.except 2 | User :" + str(
+                self.request.user.id) + "Search Word : " + searchWord)
             return redirect('whatshouldido:error')
 
 
@@ -84,7 +99,7 @@ def check(request, pk):
             if request.method == "POST":
                 uid = int(request.session['_auth_user_id'])
                 if uid != int(request.user.id):
-                    log.error("User ID is Tampered |" + str(uid) + " ==> " + request.user.id)
+                    log.error("User ID is Tampered |" + str(uid) + " ==> " + str(request.user.id))
                     return render(request, 'error.html')
                 else:
                     input_passcode = hashlib.sha256(str(request.POST.get('passcode')).encode()).hexdigest()
@@ -94,7 +109,8 @@ def check(request, pk):
                             test = group.get(grouppasscode=input_passcode)
                             print(test)
                         except:
-                            log.warning("Invalid passcode | User " + str(uid) + " ==>  Input: " + str(request.Post.get('passcode')))
+                            log.warning("Invalid passcode | User " + str(uid) + " ==>  Input: " + str(
+                                request.Post.get('passcode')))
                             return HttpResponse("입장 코드가 올바르지 않습니다.")
                         context = {'groupss': group}
                         user = AuthUser.objects.get(id=int(uid))
@@ -116,6 +132,7 @@ def check(request, pk):
         log.error("Unknown Error Occurs : views.check.except 3 | User " + str(uid))
         return redirect('whatshouldido:error')
 
+
 class MappingView(FormView):
     form_class = UsersGroupsMappingForm
     template_name = 'join.html'
@@ -129,6 +146,7 @@ class MappingView(FormView):
         except:
             return redirect('whatshouldido:error')
 
+
 def join(request, pk):
     try:
         if request.method == "GET":
@@ -138,29 +156,33 @@ def join(request, pk):
             }
             return render(request, 'join.html', context)
     except:
-        log.error(" Error Occurs join | User :"+ request.user.id)
+        log.error(" Error Occurs join | User :" + str(request.user.id))
         return redirect('whatshouldido:error')
+
 
 # Default Page
 def index(request):
-    #try:
-        page = request.GET.get('page', 1)
-        if check_auth_user_id_exist(request):
-            if request.method == 'GET':
-                user_id = int(request.session['_auth_user_id'])
-                log.info("User Login | User :"+ str(user_id))
-                return render(request, 'calendar.html', context=getUserContents(user_id))
-        return render(request, 'calendar.html')
-    #except:
+    # try:
+    page = request.GET.get('page', 1)
+    if check_auth_user_id_exist(request):
+        if request.method == 'GET':
+            user_id = int(request.session['_auth_user_id'])
+            log.info("User Login | User :" + str(user_id))
+            return render(request, 'calendar.html', context=getUserContents(user_id))
+    return render(request, 'calendar.html')
+    # except:
     #    return redirect('whatshouldido:error')
+
 
 def error(request):
     return render(request, "error.html")
+
 
 # Personal Feature
 
 def socialauth(request, exception):
     return render(request, "socialauth.html")
+
 
 def userinfo(request):
     if check_auth_user_id_exist(request):
@@ -171,6 +193,7 @@ def userinfo(request):
         return render(request, "mypage.html", context)
     else:
         return redirect('whatshouldido:index')
+
 
 def calendarDetail(request, date_time: str):
     try:
@@ -191,7 +214,7 @@ def calendarDetail(request, date_time: str):
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs calendarDetail.except 1| User: "+str(user_id))
+        log.error("Error Occurs calendarDetail.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -211,9 +234,29 @@ def groupArticleCreate(request, group_id):
             user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
             group = get_object_or_404(Studygroups, groupid=group_id)
             if request.method == "POST":
+                if request.FILES:
+                    uploaded_file = request.FILES["uploadedFile"]
+                    file_type = filename[-1]
+                    filename = str(uploaded_file.name).split('.')
+                    if len(filename) != 2:
+                        return redirect("whatshouldido:error")
+                    elif bool(re.match(not_allowed_characters, uploaded_file.name)):
+                        log.error(
+                            "Not allowed Character File name | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    if len(str(uploaded_file.name)) > 26:
+                        log.error("File name length is too Long | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    elif str(file_type) not in allowed_extension:
+                        log.error("Not allowed File extension | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    elif int(uploaded_file.size) > file_size_limit:
+                        log.error("File size is too big | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+
                 category = int(request.POST['grouparticlecategory'][0])
                 if user_id.pk != group.groupmaster.pk and category == 1:
-                    log.warning("groupArticleCreate| User: "+str(user_id.pk) + " is not group master." )
+                    log.warning("groupArticleCreate| User: " + str(user_id.pk) + " is not group master.")
                     return redirect('whatshouldido:error')
                 article_form = GroupArticlesForm(request.POST)
                 if article_form.is_valid():
@@ -223,16 +266,35 @@ def groupArticleCreate(request, group_id):
                     article.userid = user_id
                     article.groupid = get_object_or_404(Studygroups, pk=group_id)
                     article.save()
-                    log.info("Article has written | User: "+str(user_id)+" Group : "+str(group_id))
+
+                    if request.FILES:
+                        file = ArticleFiles(
+                            field_native_filename=filename[0] + '.' + file_type,
+                            articleid=article,
+                            uploader=user_id,
+                            field_encr_filename=hashlib.sha256(
+                                (uploaded_file.name + str(timezone.now())).encode()).hexdigest(),
+                            field_file_size=int(uploaded_file.size),
+                            field_file_type=file_type,
+                            uploaded_file=uploaded_file
+                        )
+                        file.uploaded_file.name = file.field_encr_filename
+
+                        file.save()
+                        log.info("file uploaded | File Num :" + str(file.field_encr_filename))
+
+                    log.info("Article has written | User: " + str(user_id) + " Group : " + str(group_id))
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+
             context = {'form': GroupArticlesForm(), 'group': group}
             context.update(getUserContents(user_id))
-            log.info("groupArticleCreate | User, Group :"+ str(user_id)+", "+str(group_id))
+
+            log.info("groupArticleCreate | User, Group :" + str(user_id) + ", " + str(group_id))
             return render(request, "group-article-write.html", context)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupArticleCreate.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupArticleCreate.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -250,11 +312,12 @@ def groupArticleList(request, group_id):
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupArticleList.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupArticleList.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
 def groupArticleRead(request, group_id, article_id):
+'''
     try:
         if check_auth_user_id_exist(request):
             user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
@@ -273,6 +336,28 @@ def groupArticleRead(request, group_id, article_id):
     except:
         log.error("Error Occurs groupArticleRead.except 1| User: "+str(user_id))
         return redirect('whatshouldido:error')
+'''
+    # try:
+    if check_auth_user_id_exist(request):
+        user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
+        article = get_object_or_404(GroupArticles, id=article_id)
+        #########CommentPART###########
+        context = model_to_dict(article)
+        context['groupname'] = article.groupid.groupname
+        context['authorname'] = article.userid.username
+        comments = GroupArticleComments.objects.filter(articleid=article_id)
+        context = {'article_data': context, "comments": comments,
+                   'comment_form': GroupArticleCommentsForm()}
+        context.update(getUserContents(user_id))
+        context_file_upload = {"files": ArticleFiles.objects.filter(articleid=article_id)}
+        context.update(context_file_upload)
+        return render(request, 'group-article-read.html', context=context)
+    else:
+        return redirect('whatshouldido:index')
+    # except:
+    #     log.error("Error Occurs groupArticleRead.except 1| User: "+str(user_id))
+    #     return redirect('whatshouldido:error')
+
 
 
 def commentCreate(request, group_id, article_id):
@@ -288,13 +373,13 @@ def commentCreate(request, group_id, article_id):
                     comment.writer = user_id
                     comment.writedate = timezone.now()
                     comment.save()
-                    log.info("commentCreate | User, Article :"+ str(user_id)+", "+str(article_id))
+                    log.info("commentCreate | User, Article :" + str(user_id) + ", " + str(article_id))
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article_id)
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article_id)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs commentCreate.except 1| User: "+str(user_id))
+        log.error("Error Occurs commentCreate.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -307,13 +392,13 @@ def commentDelete(request, group_id, article_id):
                 comment = get_object_or_404(GroupArticleComments, pk=int(request.POST['commentid']))
                 if user_id == comment.writer:
                     comment.delete()
-                    log.info("commentDelete | User, Article :"+ str(user_id) +", "+str(article_id))
+                    log.info("commentDelete | User, Article :" + str(user_id) + ", " + str(article_id))
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article_id)
             return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article_id)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs commentDelete.except 1| User: "+str(user_id))
+        log.error("Error Occurs commentDelete.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -324,11 +409,29 @@ def groupArticleEdit(request, group_id, article_id):
             group = get_object_or_404(Studygroups, groupid=group_id)
             article = get_object_or_404(GroupArticles, pk=article_id)
             if request.method == "POST":
+                if request.FILES:
+                    uploaded_file = request.FILES["uploadedFile"]
+                    filename = str(uploaded_file.name).split('.')
+                    if len(filename) != 2:
+                        return redirect("whatshouldido:error")
+                    elif bool(re.match(not_allowed_characters, uploaded_file.name)):
+                        log.error(
+                            "Not allowed Character File name | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    file_type = filename[-1]
+                    if len(str(uploaded_file.name)) > 26:
+                        log.error("File name length is too Long | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    elif str(file_type) not in allowed_extension:
+                        log.error("Not allowed File extension | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
+                    elif int(uploaded_file.size) > file_size_limit:
+                        log.error("File size is too big | User: " + str(user_id) + " Group : " + str(group_id))
+                        return redirect('whatshouldido:error')
                 # 이 글이 현재 유저의 소유인지 확인
                 if user_id.id != article.userid.id:
                     return redirect('whatshouldido:group-article-list', group_id=group_id)
                 category = int(request.POST['grouparticlecategory'][0])
-                print(category)
                 if user_id.pk != group.groupmaster.pk and category == 1:
                     return redirect('whatshouldido:error')
                 article_form = GroupArticlesForm(request.POST, instance=article)
@@ -339,15 +442,33 @@ def groupArticleEdit(request, group_id, article_id):
                     article.userid = user_id
                     article.groupid = get_object_or_404(Studygroups, pk=group_id)
                     article.save()
-                    log.info("groupArticleEdit | User, Group :"+ str(user_id)+", "+str(group_id))
+                    if request.FILES:
+                        file = ArticleFiles(
+                            field_native_filename=filename[0] + '.' + file_type,
+                            articleid=article,
+                            uploader=user_id,
+                            field_encr_filename=hashlib.sha256(
+                                (uploaded_file.name + str(timezone.now())).encode()).hexdigest(),
+                            field_file_size=int(uploaded_file.size),
+                            field_file_type=file_type,
+                            uploaded_file=uploaded_file
+                        )
+                        file.uploaded_file.name = file.field_encr_filename
+                        file.save()
+                        log.info("file uploaded | File Num :" + str(file.field_encr_filename))
+
+                    log.info("groupArticleEdit | User, Group :" + str(user_id) + ", " + str(group_id))
                     return redirect('whatshouldido:group-article-read', group_id=group_id, article_id=article.pk)
+
             context = {'form': GroupArticlesForm(instance=article), 'group': group, 'article': article}
             context.update(getUserContents(user_id))
+            context_file_upload = {"files": ArticleFiles.objects.filter(articleid=article_id)}
+            context.update(context_file_upload)
             return render(request, "group-article-write.html", context)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupArticleEdit.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupArticleEdit.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -359,14 +480,14 @@ def groupArticleDelete(request, group_id, article_id):
             article = get_object_or_404(GroupArticles, pk=article_id)
             if user_id == article.userid:
                 article.delete()
-                log.info("groupArticleDelete | User, Group :"+ str(user_id)+", "+str(group_id))
+                log.info("groupArticleDelete | User, Group :" + str(user_id) + ", " + str(group_id))
                 return redirect('whatshouldido:group-article-list', group_id=group_id)
 
             return redirect('whatshouldido:error')
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupArticleDelete.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupArticleDelete.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -386,7 +507,7 @@ def groupAssignmentList(request, group_id):
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupAssignmentList.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupAssignmentList.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -406,12 +527,12 @@ def groupAssignmentCreate(request, group_id):
                     return redirect('whatshouldido:group-assign-read', group_id=group_id, assign_id=assign.pk)
             context = {'form': GroupAssignmentsForm()}
             context.update(getUserContents(user_id))
-            log.info("groupAssignmentCreate | User, Group :"+ str(user_id)+", "+str(group_id))
+            log.info("groupAssignmentCreate | User, Group :" + str(user_id) + ", " + str(group_id))
             return render(request, "group-assign-write.html", context)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupAssignmentCreate.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupAssignmentCreate.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -433,12 +554,12 @@ def groupAssignmentEdit(request, group_id, assign_id):
                                     group_id=group_id, article_id=assign.pk)
             context = {'form': GroupAssignmentsForm(instance=assign)}
             context.update(getUserContents(user_id))
-            log.info("groupAssignmentEdit | User, Assignment :"+ str(user_id)+", "+str(assign_id))
+            log.info("groupAssignmentEdit | User, Assignment :" + str(user_id) + ", " + str(assign_id))
             return render(request, "group-assign-write.html", context)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupAssignmentEdit.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupAssignmentEdit.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -455,7 +576,7 @@ def groupAssignmentRead(request, group_id, assign_id):
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupAssignmentRead.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupAssignmentRead.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -471,12 +592,12 @@ def groupAssignmentDelete(request, group_id, assign_id):
             group = get_object_or_404(Studygroups, groupid=group_id)
             if user_id.pk == group.groupmaster.id:
                 get_object_or_404(GroupAssignments, id=assign_id).delete()
-                log.info("groupAssignmentDelete | User, Assignment :"+ str(user_id)+", "+str(assign_id))
+                log.info("groupAssignmentDelete | User, Assignment :" + str(user_id) + ", " + str(assign_id))
                 return redirect('whatshouldido:group-assign-list', group_id=group_id)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupAssignmentDelete.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupAssignmentDelete.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -491,7 +612,7 @@ def groupSearch(request):
         context = {'studygroups': group_list}
         return render(request, "group-search.html", context)
     except:
-        log.error("Error Occurs groupSearch.except 1| User: "+str(request.user.id))
+        log.error("Error Occurs groupSearch.except 1| User: " + str(request.user.id))
         return redirect('whatshouldido:error')
 
 
@@ -510,17 +631,18 @@ def groupCreate(request):
                         useridx=group.groupmaster,
                         groupidx=group)
                     group_mapping.save()
-                    print(group.grouppasscode)
                     return redirect('whatshouldido:groupinfo', group_id=group.pk)
             form = StudygroupsForm()
             context = {'form': form}
             context.update(getUserContents(user_id))
+
             log.info("groupCreate | User :"+ str(user_id))
+
             return render(request, 'group-make.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except:
-        log.error("Error Occurs groupCreate.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupCreate.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -536,6 +658,7 @@ def groupInfo(request, group_id):
     return render(request, 'group-info.html', {'group_data': context})
 
 
+###이거 그룹장인지 검사하던가?
 def groupManage(request, group_id):
     try:
         if check_auth_user_id_exist(request):
@@ -552,12 +675,12 @@ def groupManage(request, group_id):
             form = StudygroupsForm(instance=group)
             context = {'form': form}
             context.update(getUserContents(user_id))
-            log.info("groupManage | User,Group :"+ user_id+", "+group_id)
+            log.info("groupManage | User,Group :" + user_id + ", " + group_id)
             return render(request, 'group-manage.html', context=context)
         else:
             return redirect('whatshouldido:index')
     except Exception:
-        log.error("Error Occurs groupManage.except 1| User: "+str(user_id))
+        log.error("Error Occurs groupManage.except 1| User: " + str(user_id))
         return redirect('whatshouldido:error')
 
 
@@ -566,10 +689,11 @@ def changeFileName(file):
 
 
 ###############################
+
 allowed_extension = ('zip')
 import re
 
-
+'''
 def uploadFile(request):
     if request.method == "POST":
         uploaded_file = request.FILES["uploadedFile"]
@@ -594,7 +718,7 @@ def uploadFile(request):
     return render(request, "file-upload.html", context={
         "files": documents
     })
-
+'''
 def createGroupPlan(request,group_id):
     if request.method == "POST":
         user_id = int(self.request.session['_auth_user_id'])
@@ -622,3 +746,21 @@ def createGroupPlan(request,group_id):
         form = GroupCalendarForm()
     context = {'form':form}
     return render(request, 'creategroupplan.html', context)
+
+# 수정중#### DON"T TOUCH#######
+
+from config.settings import MEDIA_ROOT
+
+
+def download_line(request, group_id, article_id, file_id):
+    if check_auth_user_id_exist(request):
+        user_id = get_object_or_404(AuthUser, pk=int(request.session['_auth_user_id']))
+        mapping = get_object_or_404(UsersGroupsMapping, useridx=user_id, groupidx=group_id)
+        file = ArticleFiles.objects.get(pk=file_id)
+        fs = FileSystemStorage(MEDIA_ROOT)
+        response = FileResponse(fs.open(file.field_encr_filename, 'rb'), content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename="{file.field_native_filename}"'
+        return response
+    else:
+        return redirect('whatshouldido:index')
+

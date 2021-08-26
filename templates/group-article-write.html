@@ -1,12 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
-<header>
-    <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
-        <div class="container d-flex justify-content-between">
-            <a href="/" class="navbar-brand d-flex align-items-center">
-                <strong>공지사항</strong>
-            </a>
-        </div>
+    <div class="wrap">
+        <h1>Article Write</h1>
+            <form method="POST" class="post-form" enctype="multipart/form-data" >{% csrf_token %}
+                    <p><label for="id_grouparticletitle">게시글 제목:</label>
+                        <input type="text" name="grouparticletitle" maxlength="64" required="" id="id_grouparticletitle"
+                        value="{{ article.grouparticletitle }}"></p>
+                    <p><label for="id_grouparticlecontent">게시글 내용:</label>
+                        <input type="text" name="grouparticlecontent" maxlength="150" required="" id="id_grouparticlecontent"
+                        value="{{ article.grouparticlecontent }}"></p>
+                    <p><label for="id_grouparticlecategory">Grouparticlecategory:</label>
+                        <select name="grouparticlecategory" required="" id="id_grouparticlecategory" multiple="">
+                                {% if user.id == group.groupmaster.id %}
+                                        <option value="1"
+                                        {% if article.grouparticlecategory == 1 %}
+                                                selected{% endif %}>공지사항</option>
+                                {% endif %}
+                                <option value="2"
+                                {% if article.grouparticlecategory == 2 %}
+                                        selected{% endif %}>카테고리 1</option>
+                                <option value="3"
+                                {% if article.grouparticlecategory == 3%}
+                                        selected{% endif %}>카테고리 2</option>
+                    </select></p>
+    <br>
+        ################## File Upload ##################
+
+        <br>
+        ~ ! @ # $ % ^ & * = [ ] { } " ' ` 등의 문자가 들어간 파일은 업로드 불가 <br>
+        .zip 파일만 업로드 가능 <br>
+        <input type="file" name="uploadedFile">
+                <br>
+                <br>
+    <button type="submit" class="save btn btn-default">[Save]</button>
+    </form>
+    <style>
+        table {
+            width: 50%;
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background-color: #FFFFFF;
+        }
+
+        table tr td {
+            padding-top: 15px;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Upload Date & Time</th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.id }}</td>
+                <td>{{ file.field_native_filename }}</td>
+                <td>{{ file.uploaded_date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
     </div>
 </header>
 <div class="container">

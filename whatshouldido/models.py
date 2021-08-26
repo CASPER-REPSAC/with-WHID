@@ -201,8 +201,10 @@ class GroupCalendar(models.Model):
         managed = False
         db_table = 'group_calendar'  # studygroups가 아니라 별개의 테이블이 있음.
 
+
 class GroupArticleComments(models.Model):
-    articleid = models.ForeignKey(GroupArticles, related_name='commentid', db_column='articleid',on_delete=models.CASCADE)
+    articleid = models.ForeignKey(GroupArticles, related_name='commentid', db_column='articleid',
+                                  on_delete=models.CASCADE)
     commentid = models.AutoField(primary_key=True)
     writer = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='writer')
     comment = models.CharField(max_length=100)

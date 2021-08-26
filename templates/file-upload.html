@@ -1,5 +1,7 @@
-<!DOCTYPE html>
+{% extends 'group-article-read.html' %}
 {% load static %}
+{% block file_upload  %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +25,7 @@
         }
 
         table {
-            width: 100%;
+            width: 50%;
             text-align: center;
             margin-top: 25px;
             padding: 25px;
@@ -36,11 +38,6 @@
     </style>
 </head>
 <body>
-    <form action="{% url 'whatshouldido:upload-file' %}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="uploadedFile">
-        {% csrf_token %}
-        <input type="submit" value="Upload">
-    </form>
     <table>
         <tr>
             <th>ID</th>
@@ -57,4 +54,4 @@
 
     </table>
 </body>
-</html>
+</html>        {% endblock %}

@@ -2,6 +2,7 @@ from django import forms
 from django.forms import widgets
 from whatshouldido.models import *
 
+
 class AuthUserForm(forms.ModelForm):
     class Meta:
         model = AuthUser
@@ -60,16 +61,17 @@ class GroupArticlesForm(forms.ModelForm):
         # fields = ['userid', 'grouparticletitle', 'grouparticlecontent', 'grouparticlecategory', 'uploaddate']
         fields = ['grouparticletitle', 'grouparticlecontent']
         labels = {
-            #'userid': '작성자',
+            # 'userid': '작성자',
             'grouparticletitle': '게시글 제목',
             'grouparticlecontent': '게시글 내용',
             'grouparticlecategory': '게시글 카테고리',
-            #'uploaddate': '게시일자',
+            # 'uploaddate': '게시일자',
         }
 
 
 class GroupAssignmentsForm(forms.ModelForm):
     groupassignmentlimit = forms.DateTimeField(widget=forms.SelectDateWidget())
+
     class Meta:
         model = GroupAssignments
         fields = ['groupassignment', 'groupassignmentdetail', 'groupassignmentlimit']
@@ -85,6 +87,14 @@ class DateInput(forms.DateInput):
 class TimeInput(forms.TimeInput):
     input_type = 'time'
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class TimeInput(forms.TimeInput):
+    input_type = 'time'
+
+
 class GroupCalendarForm(forms.ModelForm):
     class Meta:
         model = GroupCalendar
@@ -99,6 +109,7 @@ class GroupCalendarForm(forms.ModelForm):
             'groupplantime' : TimeInput()
         }
 
+
 class GroupArticleCommentsForm(forms.ModelForm):
     class Meta:
         model = GroupArticleComments
@@ -108,6 +119,6 @@ class GroupArticleCommentsForm(forms.ModelForm):
             # 'articleid':'글 번호',
             # 'commentid':'댓글 번호',
             # 'writer':'작성자',
-            'comment':'댓글',
+            'comment': '댓글',
             # 'writedate':'작성일자',
         }
