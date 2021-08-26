@@ -2,7 +2,7 @@
 FullCalendar v5.9.0
 Docs & License: https://fullcalendar.io/
 (c) 2021 Adam Shaw
-*/
+*/ 
 var FullCalendar = (function (exports) {
     'use strict';
 

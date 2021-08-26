@@ -5,6 +5,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic.edit import FormView
 
+from django.forms.models import model_to_dict
+
+
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.http import FileResponse
@@ -25,7 +28,7 @@ log = logging.getLogger('django')
 def check_auth_user_id_exist(request):
     if '_auth_user_id' in dict(request.session):
         return True
-    log.error("Error Occurs : views.check_auth_user_id_exist False | User :" + str(request.user.id))
+    log.error("Error Occurs : views.check_auth_user_id_exist False | User " )
     return False
 
 
@@ -314,6 +317,26 @@ def groupArticleList(request, group_id):
 
 
 def groupArticleRead(request, group_id, article_id):
+'''
+    try:
+        if check_auth_user_id_exist(request):
+            user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
+            article = get_object_or_404(GroupArticles, id=article_id)
+            #########CommentPART###########
+            context = model_to_dict(article)
+            context['groupname'] = article.groupid.groupname
+            context['authorname'] = article.userid.username
+            comments = GroupArticleComments.objects.filter(articleid=article_id)
+            context = {'article_data': context, 'comments': comments,'comment_form': GroupArticleCommentsForm()}
+            log.error("tr(comments.comment)")
+            context.update(getUserContents(user_id))
+            return render(request, 'group-article-read.html', context=context)
+        else:
+            return redirect('whatshouldido:index')
+    except:
+        log.error("Error Occurs groupArticleRead.except 1| User: "+str(user_id))
+        return redirect('whatshouldido:error')
+'''
     # try:
     if check_auth_user_id_exist(request):
         user_id = getUserObject_or_404(int(request.session['_auth_user_id']), group_id)
@@ -334,6 +357,7 @@ def groupArticleRead(request, group_id, article_id):
     # except:
     #     log.error("Error Occurs groupArticleRead.except 1| User: "+str(user_id))
     #     return redirect('whatshouldido:error')
+
 
 
 def commentCreate(request, group_id, article_id):
@@ -611,7 +635,9 @@ def groupCreate(request):
             form = StudygroupsForm()
             context = {'form': form}
             context.update(getUserContents(user_id))
-            log.info("groupCreate | User :" + str(user_id))
+
+            log.info("groupCreate | User :"+ str(user_id))
+
             return render(request, 'group-make.html', context=context)
         else:
             return redirect('whatshouldido:index')
@@ -623,6 +649,7 @@ def groupCreate(request):
 def groupInfo(request, group_id):
     try:
         group_data = Studygroups.objects.get(groupid=group_id)
+        #group_members = UsersGroupsMapping.objects.get(groupidx=group_id)
         context = model_to_dict(group_data)
     except:
         print(Exception)
@@ -662,6 +689,64 @@ def changeFileName(file):
 
 
 ###############################
+
+allowed_extension = ('zip')
+import re
+
+'''
+def uploadFile(request):
+    if request.method == "POST":
+        uploaded_file = request.FILES["uploadedFile"]
+        filename = str(uploaded_file.name).split('.')
+        if len(filename) != 2:
+            return redirect("whatshouldido:error")
+        file_type = filename[-1]
+        print(file_type)
+        file = ArticleFiles(
+            field_native_filename=filename[0]+'.'+file_type,
+            articleid=GroupArticles.objects.get(pk=1),
+            uploader=AuthUser.objects.get(pk=5),
+            field_encr_filename=hashlib.sha256((uploaded_file.name + str(timezone.now())).encode()).hexdigest(),
+            field_file_size=1,
+            field_file_type=file_type,
+            uploaded_file=uploaded_file
+        )
+        file.uploaded_file.name = file.field_encr_filename
+        file.save()
+    log.info("file uploaded | File Num :" +str(file.field_encr_filename))
+    documents = ArticleFiles.objects.all()
+    return render(request, "file-upload.html", context={
+        "files": documents
+    })
+'''
+def createGroupPlan(request,group_id):
+    if request.method == "POST":
+        user_id = int(self.request.session['_auth_user_id'])
+        map = Studygroups.objects.get(groupid=group_id)
+        field =['groupid','groupname','grouppasscode','groupmaster']
+        udx=models_to_dict(map,field)
+        if(udx['groupmaster'] == user_id.pk):
+            form = GroupCalendarForm(request.POST)
+            if form.is_valid():
+                if (len(request.POST.get('groupplanname')) < 1) or (len(request.POST.get('groupplaninfo')) < 1):
+                    res = "길이가 너무 짧습니다."
+                else:
+                    plan = form.save(commit=False)
+                    plan.groupid = group_id
+                    #plan.groupplanname = request.POST.get('groupplanname')
+                    #plan.groupplaninfo = request.POST.get('groupplaninfo')
+                    #plan.groupplanlink = request.POST.get('groupplanlink')
+                    #plan.groupplanstart = request.POST.get('groupplanstart')
+                    #plan.groupplanend = request.POST.get('groupplanend')
+                    plan.save()
+                    return rendirect('index')
+        else:
+            return redirect('whatshouldido:error')
+    else:
+        form = GroupCalendarForm()
+    context = {'form':form}
+    return render(request, 'creategroupplan.html', context)
+
 # 수정중#### DON"T TOUCH#######
 
 from config.settings import MEDIA_ROOT
@@ -678,3 +763,4 @@ def download_line(request, group_id, article_id, file_id):
         return response
     else:
         return redirect('whatshouldido:index')
+
