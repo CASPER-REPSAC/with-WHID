@@ -24,9 +24,9 @@
             <div class="dates"></div>
         </div>
         <script>
-            let data = "{{ data }}";
-            let assignments = "{% for assignments in data.assign %} [과제]{{ assignments.groupassignment }} <br> {% endfor %}" ;
-            let calendar = "{% for calendar in data.calendars %} [스터디]{{ calendar.groupplanname }} <br> {% endfor %}" ;
+            let data = '{{ data.assign }}';
+            let assignments = "{% for assignments in data.assign %} [과제] {{ assignments.groupassignment }} <br> {% endfor %}" ;
+            let calendar = "{% for calendar in data.calendars %} [스터디] {{ calendar.groupplanname }} <br> {% endfor %}" ;
         </script>
         <script src="{% static 'js/calender.js' %}"></script>
 {% endblock %}

@@ -28,6 +28,8 @@ const renderCalender = () => {
     for (let i = 1; i < 7 - TLDay; i++) {
         nextDates.push(i);
     }
+    
+    const arrrrr = data.split(',')
 
     const dates = prevDates.concat(thisDates, nextDates);
     const firstDateIndex = dates.indexOf(1);
@@ -46,8 +48,8 @@ const renderCalender = () => {
                 <div class="date_event">
                     <div class="event-itm">
                         ${assignments}
-                        <br>
                         ${calendar}
+                        ${typeof(arrrrr)}
                     </div>
                 </div>
 

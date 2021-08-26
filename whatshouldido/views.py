@@ -23,7 +23,7 @@ def getUserContents(user_id):
     assign_list, article_list, calendar_list, registered_groups = [], [], [],list(UsersGroupsMapping.objects.filter(useridx=user_id))
     for mapping_model in registered_groups:
         assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by('groupassignmentlimit')
-        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
+        article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx,grouparticlecategory=1).order_by('-uploaddate')
         calendar_list += GroupCalendar.objects.filter(groupid=mapping_model.groupidx)
     return {
             "data": {
