@@ -539,7 +539,7 @@ def uploadFile(request):
         file_type = filename[-1]
         print(file_type)
         file = ArticleFiles(
-            field_native_filename=filename[0],
+            field_native_filename=filename[0]+'.'+file_type,
             articleid=GroupArticles.objects.get(pk=1),
             uploader=AuthUser.objects.get(pk=5),
             field_encr_filename=hashlib.sha256((uploaded_file.name + str(timezone.now())).encode()).hexdigest(),
