@@ -23,7 +23,14 @@
                     <div class="day">토</div>
                 </div>
                 <div class="dates"></div>
-                        {{ data }}
+                        {% for i in data.article %}
+                            {{ i.grouparticletitle }} | {{ i.uploaddate }}<br>
+                        {% endfor %}
+            <br>
+                {% for i in data.assign %}
+                            {{ i.groupassignment }} | {{ i.groupassignmentlimit }}<br>
+                        {% endfor %}
+
             </div>
         </section>
         <script src="{% static 'js/calender.js' %}"></script>

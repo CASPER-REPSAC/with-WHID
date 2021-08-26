@@ -292,3 +292,19 @@ class UsersGroupsMapping(models.Model):
         managed = False
         db_table = 'users_groups_mapping'
         unique_together = (('id', 'useridx', 'groupidx'),)
+
+
+class ArticleFiles(models.Model):
+    id = models.IntegerField(primary_key=True)
+    articleid = models.ForeignKey('GroupArticles', models.DO_NOTHING, db_column='articleid')
+    uploader = models.ForeignKey('AuthUser', models.DO_NOTHING, db_column='uploader')
+    field_native_filename = models.CharField(db_column='_native_filename', max_length=32)  # Field renamed because it started with '_'.
+    field_encr_filename = models.CharField(db_column='_encr_filename', unique=True, max_length=64)  # Field renamed because it started with '_'.
+    uploaded_date = models.DateTimeField(auto_now = True)
+    field_file_size = models.IntegerField(db_column='_file_size')  # Field renamed because it started with '_'.
+    field_file_type = models.CharField(db_column='_file_type', max_length=4)  # Field renamed because it started with '_'.
+    uploaded_file = models.FileField(upload_to="")
+
+    class Meta:
+        managed = False
+        db_table = 'article_files'

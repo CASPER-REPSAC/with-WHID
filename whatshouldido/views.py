@@ -112,14 +112,20 @@ def index(request):
     try:
         page = request.GET.get('page', 1)
         if check_auth_user_id_exist(request):
-
-            queryset_list = []
+            assign_list = []
+            article_list = []
             if request.method == 'GET':
                 user_id = int(request.session['_auth_user_id'])
                 usr_grp_mapping = UsersGroupsMapping.objects.filter(useridx=user_id)
                 for mapping_model in usr_grp_mapping:
-                    queryset_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx)
-                return render(request, 'calendar.html', {"data": [x for x in map(model_to_dict, queryset_list)]})
+                    assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by(
+                        'groupassignmentlimit')
+                for mapping_model in usr_grp_mapping:
+                    article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
+
+                context = {"data": {'assign': [x for x in map(model_to_dict, assign_list)],
+                                    'article': [x for x in map(model_to_dict, article_list)]}}
+                return render(request, 'calendar.html', context)
         return render(request, 'calendar.html')
     except:
         return redirect('whatshouldido:error')
@@ -179,7 +185,7 @@ def getUserObject_or_404(user_id: int, group_id: int):
 
 
 #######################
-# Article
+# Group - Article
 def groupArticleCreate(request, group_id):
     try:
         if check_auth_user_id_exist(request):
@@ -327,7 +333,7 @@ def groupArticleDelete(request, group_id, article_id):
 
 
 #######################
-# Assignment
+# Group - Assignment
 def groupAssignmentList(request, group_id):
     try:
         if check_auth_user_id_exist(request):
@@ -494,3 +500,29 @@ def groupManage(request, group_id):
             return redirect('whatshouldido:index')
     except Exception:
         return redirect('whatshouldido:error')
+
+
+###############################
+def uploadFile(request):
+    if request.method == "POST":
+        # Fetching the form data
+        fileTitle = request.POST["fileTitle"]
+        print(fileTitle)
+        uploaded_file = request.FILES["uploadedFile"]
+
+        # Saving the information in the database
+        file = ArticleFiles(
+            field_native_filename=fileTitle,
+            uploaded_file=uploaded_file,
+            articleid=GroupArticles.objects.get(pk=1),
+            uploader=AuthUser.objects.get(pk=5),
+            field_encr_filename=hashlib.sha256((fileTitle+str(timezone.now())).encode()).hexdigest(),
+            field_file_size=1,
+            field_file_type='sad'
+        )
+        file.save()
+
+    documents = ArticleFiles.objects.all()
+    return render(request, "file-upload.html", context={
+        "files": documents
+    })
