@@ -1,5 +1,4 @@
 let date = new Date();
-
 const renderCalender = () => {
     const viewYear = date.getFullYear();
     const viewMonth = date.getMonth();
@@ -33,7 +32,6 @@ const renderCalender = () => {
     const dates = prevDates.concat(thisDates, nextDates);
     const firstDateIndex = dates.indexOf(1);
     const lastDateIndex = dates.lastIndexOf(TLDate);
-
     dates.forEach((date, i) => {
         const condition = i >= firstDateIndex && i < lastDateIndex + 1 ?
             'this' :
@@ -46,7 +44,9 @@ const renderCalender = () => {
                 </div>
 
                 <div class="date_event">
-                    <div class="event-itm">EVENT</div>
+                    <div class="event-itm">
+                        ${assignments}
+                    </div>
                 </div>
 
             </div>

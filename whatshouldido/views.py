@@ -39,7 +39,6 @@ class StudygroupsView(FormView):
                 user_id = int(self.request.session['_auth_user_id'])
                 context.update(getUserContents(user_id))
                 response_kwargs.setdefault('content_type', self.content_type)
-                log.info("Search : StudygroupsView | User :"+ str(self.request.user.id) +"  Search Word : " + searchWord)
                 return self.response_class(
                     request=self.request,
                     template=self.get_template_names(),
@@ -48,7 +47,7 @@ class StudygroupsView(FormView):
                     **response_kwargs
                 )
         except:
-            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ self.request.user.id + "Search Word : " + searchWord)
+            log.error("Error Occurs : views.StudygroupsView.except 1 | User :"+ self.request.user.id )
             return redirect('whatshouldido:error')
 
     def form_valid(self, form):
@@ -60,10 +59,13 @@ class StudygroupsView(FormView):
 
                 context = {'form': form, 'search_term': searchWord, 'studygroups': group_list}
                 context.update(getUserContents(user_id))
+                log.info("Search : enter StudygroupsView | User :"+ str(self.request.user.id)+ "Search Word : " + searchWord)
                 return render(self.request, self.template_name, context)
             else:
+                log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ self.request.user.id )
                 return redirect('whatshouldido:error')
         except:
+            log.error("Error Occurs : views.StudygroupsView.except 2 | User :"+ self.request.user.id + "Search Word : " + searchWord)
             return redirect('whatshouldido:error')
 
 
