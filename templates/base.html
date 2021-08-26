@@ -31,7 +31,7 @@
                 <div class="title">공지사항</div>
                 <ul>
                   {% for article in data.article %}
-                    <li><a href="/group/{{ article.groupid }}/article/{{ article.id }}">{{article.grouparticletitle}}}</a></li>
+                    <li><a href="/group/{{ article.groupid }}/article/{{ article.id }}">{{article.grouparticletitle}}</a></li>
                   {% endfor %}
                 </ul>
               </div>
@@ -43,6 +43,9 @@
                   {% endfor %}
                 </ul>
               </div>
+                {% for i in data.groups %}
+                    <li>{{ i.groupname }}</li>
+                  {% endfor %}
             {% endif %}
           </section>
           <section class="white">
