@@ -21,6 +21,10 @@ def check_auth_user_id_exist(request):
 
 log = logging.getLogger('django')
 
+def check_auth_user_id_exist(request):
+    if '_auth_user_id' in dict(request.session):
+        return True
+    return False
 
 class StudygroupsView(FormView):
     form_class = GroupSearchForm
@@ -88,6 +92,7 @@ def check(request,pk):
         #sessions=Session.objects.get(session_key=skey)
         #s_data = sessions.get_decoded()
         if(uid == str(request.user.id) ):
+
             input_passcode = request.POST.get('passcode')
             try:
                 group = Studygroups.objects.filter(groupid=pk, grouppasscode=input_passcode)
@@ -154,6 +159,7 @@ def index(request):
                 for mapping_model in usr_grp_mapping:
                     assign_list += GroupAssignments.objects.filter(groupid=mapping_model.groupidx).order_by(
                         'groupassignmentlimit')
+
                 for mapping_model in usr_grp_mapping:
                     article_list += GroupArticles.objects.filter(groupid=mapping_model.groupidx).order_by('-uploaddate')
 
@@ -163,7 +169,6 @@ def index(request):
         return render(request, 'calendar.html')
     except:
         return redirect('whatshouldido:error')
-
 
 
 def error(request):
